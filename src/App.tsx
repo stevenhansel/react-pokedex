@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from "react-redux";
 import { ScaleLoader } from "react-spinners";
 import { Waypoint } from "react-waypoint";
 import PokemonCard from "./components/PokemonCard";
-import Skeleton from "./components/Skeleton";
 import { getPokemons, pokemonsSelector } from "./features/pokemonSlice";
 import { SliceStatus } from "./globals";
 

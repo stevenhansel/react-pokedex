@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { Pokemon } from "../features/pokemonSlice";
+import PokemonType from "./PokemonType";
 
 type Props = Pokemon;
 
@@ -21,12 +22,7 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
         <h1 className="capitalize font-bold text-xl mb-2">{name}</h1>
         <div className="flex flex-wrap mx-auto justify-center">
           {types.map(({ type }) => (
-            <div
-              key={type.name}
-              className="mr-2 capitalize bg-white tracking-wide text-gray-800 font-bold rounded-lg border-yellow-500 hover:border-yellow-600 hover:bg-yellow-500 hover:text-black shadow-md px-6 inline-flex items-center py-2"
-            >
-              <p>{type.name}</p>
-            </div>
+            <PokemonType key={`${name}-${type}`} type={type.name} />
           ))}
         </div>
       </div>

@@ -7,6 +7,11 @@ module.exports = {
       },
       colors: {
         primary: "",
+        primaryGray: "#919191",
+        primaryRed: "",
+        primaryYellow: "",
+        primaryBlue: "",
+        primaryGreen: "",
       },
     },
   },
