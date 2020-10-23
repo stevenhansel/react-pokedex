@@ -7,6 +7,9 @@ import { NamedAPIResource } from "./types";
 import { statusHandlerReducer } from "./statusHandlerReducer";
 import { camelcaseObject } from "../utils/camelcaseObject";
 
+const INITIAL_SIZE = 9;
+const PAGINATE_SIZE = 3;
+
 export type Pokemon = {
   id: number;
   name: string;
@@ -97,8 +100,11 @@ const statusHandler = { initialize, error, success };
 
 export const getPokemons = wrapReduxAsyncHandler(
   statusHandler,
-  async (dispatch) => {
-    const { results } = await fromApi.getPokemons(5, 5);
+  async (dispatch, { page }) => {
+    const { results } = await fromApi.getPokemons(
+      INITIAL_SIZE,
+      page * PAGINATE_SIZE
+    );
 
     const pokemons: Pokemon[] = [];
     for await (const { url } of results) {

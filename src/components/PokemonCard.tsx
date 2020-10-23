@@ -3,7 +3,7 @@ import { Pokemon } from "../features/pokemonSlice";
 
 type Props = Pokemon;
 
-const PokemonCard: React.FC<Props> = ({ name, sprites, types }) => {
+const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
   const [spriteState, setSpriteState] = useState<string>(sprites.frontDefault);
 
   return (
@@ -17,6 +17,7 @@ const PokemonCard: React.FC<Props> = ({ name, sprites, types }) => {
       </div>
 
       <div className="px-6 py-4">
+        <p className="text-lg">{id}</p>
         <h1 className="capitalize font-bold text-xl mb-2">{name}</h1>
         <div className="flex flex-wrap mx-auto justify-center">
           {types.map(({ type }) => (

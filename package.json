@@ -19,6 +19,8 @@
     "react-dom": "^16.14.0",
     "react-redux": "^7.2.1",
     "react-scripts": "3.4.3",
+    "react-spinners": "^0.9.0",
+    "react-waypoint": "^9.0.3",
     "typescript": "~3.7.2"
   },
   "scripts": {

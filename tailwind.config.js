@@ -5,6 +5,9 @@ module.exports = {
       screens: {
         xs: { max: "400px" },
       },
+      colors: {
+        primary: "",
+      },
     },
   },
 };
