@@ -5,6 +5,7 @@ import { RootState } from "./store";
 import { NamedAPIResource } from "./types";
 import { camelcaseObject } from "../utils/camelcaseObject";
 import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
+import { leftPad } from "../utils/leftPad";
 
 const INITIAL_SIZE = 9;
 const PAGINATE_SIZE = 3;
@@ -109,7 +110,17 @@ export const getPokemons = wrapReduxAsyncHandler(
     for await (const { url } of results) {
       const pokemonId = Number(url.split("/").slice(-2)[0]);
       const pokemon = await fromApi.getPokemonById(pokemonId);
-      pokemons.push(camelcaseObject(pokemon));
+      const pokemonImageUrl =
+        "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/" +
+        leftPad(pokemon.id, 3) +
+        ".png";
+
+      pokemons.push({
+        ...camelcaseObject(pokemon),
+        sprites: {
+          frontDefault: pokemonImageUrl,
+        },
+      });
     }
 
     dispatch(getPokemonsReducer({ pokemons }));
