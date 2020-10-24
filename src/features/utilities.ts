@@ -20,6 +20,10 @@ type StatusHandler = {
   error: ActionCreatorWithPayload<any, string>;
 };
 
+export type WrapReduxAsyncHandlerType = (
+  args?: any
+) => (dispatch: React.Dispatch<any>) => Promise<void>;
+
 export const wrapReduxAsyncHandler = (
   statusHandler: StatusHandler,
   callback: (dispatch: Dispatch<any>, args: any) => Promise<void>

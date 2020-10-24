@@ -29,7 +29,7 @@ const PokemonTypeColors = {
 const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
   const [spriteState, setSpriteState] = useState<string>(sprites.frontDefault);
   const backgroundColors = types.map(({ type }) => {
-    const [[_, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
+    const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
       ([key, _]) => key === type.name
     );
 
@@ -41,7 +41,7 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
       style={{
         backgroundColor: backgroundColors[0],
       }}
-      className="max-w-sm rounded-lg overflow-hidden shadow-lg mx-auto w-full"
+      className="w-full rounded-lg overflow-hidden shadow-lg mx-auto"
     >
       <div
         className="py-8 mx-auto w-full flex items-center justify-center"
@@ -58,7 +58,7 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
         />
       </div>
 
-      <div className="bg-white rounded-t-3xl w-full pt-4 pb-8">
+      <div className="bg-white w-full pt-4 pb-8">
         <p className="text-lg font-medium">#{leftPad(id, 3)}</p>
         <h1 className="capitalize font-bold text-2xl mb-2">{name}</h1>
         <div className="flex flex-wrap mx-auto justify-center">
