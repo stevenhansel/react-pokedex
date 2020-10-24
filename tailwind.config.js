@@ -6,7 +6,7 @@ module.exports = {
         xs: { max: "400px" },
       },
       colors: {
-        primary: "",
+        primary: "#E3350D",
         primaryGray: "#919191",
         primaryRed: "",
         primaryYellow: "",
