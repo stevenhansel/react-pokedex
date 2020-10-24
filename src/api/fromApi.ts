@@ -4,7 +4,7 @@ import { createApiRequest } from "./axios";
 class ApiCallCreator {
   getPokemons(limit: number, offset: number) {
     return createApiRequest(
-      `/pokemon?limit=${limit}&offset=${offset}`,
+      `/pokemon/?limit=${limit}&offset=${offset}`,
       HTTP_METHODS.GET,
       {}
     );

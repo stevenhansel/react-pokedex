@@ -1,11 +1,28 @@
-import { ActionCreatorWithPayload } from "@reduxjs/toolkit";
 import { Dispatch } from "react";
+import { ActionCreatorWithPayload, PayloadAction } from "@reduxjs/toolkit";
+import { SliceStatus } from "../globals";
+
+export const statusHandlerReducer = {
+  initialize: (state: any, action: PayloadAction) => {
+    state.status.state = SliceStatus.LOADING;
+  },
+  error: (state: any, action: PayloadAction) => {
+    state.status.state = SliceStatus.ERROR;
+  },
+  success: (state: any, action: PayloadAction) => {
+    state.status.state = SliceStatus.SUCCESS;
+  },
+};
 
 type StatusHandler = {
   initialize: ActionCreatorWithPayload<any, string>;
   success: ActionCreatorWithPayload<any, string>;
   error: ActionCreatorWithPayload<any, string>;
 };
+
+export type WrapReduxAsyncHandlerType = (
+  args?: any
+) => (dispatch: React.Dispatch<any>) => Promise<void>;
 
 export const wrapReduxAsyncHandler = (
   statusHandler: StatusHandler,

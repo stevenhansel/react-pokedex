@@ -2,10 +2,12 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import fromApi from "../api/fromApi";
 import { SliceStatus } from "../globals";
 import { RootState } from "./store";
-import { wrapReduxAsyncHandler } from "./wrapReduxAsyncHandler";
 import { NamedAPIResource } from "./types";
-import { statusHandlerReducer } from "./statusHandlerReducer";
 import { camelcaseObject } from "../utils/camelcaseObject";
+import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
+
+const INITIAL_SIZE = 9;
+const PAGINATE_SIZE = 3;
 
 export type Pokemon = {
   id: number;
@@ -97,8 +99,11 @@ const statusHandler = { initialize, error, success };
 
 export const getPokemons = wrapReduxAsyncHandler(
   statusHandler,
-  async (dispatch) => {
-    const { results } = await fromApi.getPokemons(5, 5);
+  async (dispatch, { page }) => {
+    const { results } = await fromApi.getPokemons(
+      INITIAL_SIZE,
+      page * PAGINATE_SIZE
+    );
 
     const pokemons: Pokemon[] = [];
     for await (const { url } of results) {
