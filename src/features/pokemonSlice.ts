@@ -2,10 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import fromApi from "../api/fromApi";
 import { SliceStatus } from "../globals";
 import { RootState } from "./store";
-import { wrapReduxAsyncHandler } from "./wrapReduxAsyncHandler";
 import { NamedAPIResource } from "./types";
-import { statusHandlerReducer } from "./statusHandlerReducer";
 import { camelcaseObject } from "../utils/camelcaseObject";
+import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
 
 const INITIAL_SIZE = 9;
 const PAGINATE_SIZE = 3;
