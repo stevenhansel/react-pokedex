@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Pokemon } from "../features/pokemonSlice";
 import { leftPad } from "../utils/leftPad";
 import PokemonType from "./PokemonType";
@@ -27,7 +27,6 @@ const PokemonTypeColors = {
 };
 
 const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
-  const [spriteState, setSpriteState] = useState<string>(sprites.frontDefault);
   const backgroundColors = types.map(({ type }) => {
     const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
       ([key, _]) => key === type.name
@@ -43,17 +42,13 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
       }}
       className="w-full rounded-lg overflow-hidden shadow-lg mx-auto"
     >
-      <div
-        className="py-8 mx-auto w-full flex items-center justify-center"
-        onMouseEnter={() => setSpriteState(sprites.backDefault)}
-        onMouseLeave={() => setSpriteState(sprites.frontDefault)}
-      >
+      <div className="py-8 mx-auto w-full flex items-center justify-center">
         <img
           style={{
             backgroundColor: backgroundColors[0],
           }}
           className="w-48"
-          src={spriteState}
+          src={sprites.frontDefault}
           alt={name}
         />
       </div>
