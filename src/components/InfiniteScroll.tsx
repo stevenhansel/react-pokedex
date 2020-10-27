@@ -23,7 +23,7 @@ const InfiniteScroll: React.FC<Props> = ({
 
   return (
     <div>
-      <div className="mx-auto w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-x-3 gap-y-6">
+      <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-x-3 gap-y-6">
         {children}
       </div>
       <div className="py-16 mx-auto">
@@ -31,7 +31,7 @@ const InfiniteScroll: React.FC<Props> = ({
           <ScaleLoader />
         ) : (
           <div className="mt-16">
-            <Waypoint onEnter={() => setPage((p) => p + 1)} />
+            {/* <Waypoint onEnter={() => setPage((p) => p + 1)} /> */}
           </div>
         )}
       </div>

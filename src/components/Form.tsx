@@ -27,7 +27,7 @@ const Form: React.FC<Props> = ({
   }, [value, changeHandler]);
 
   return (
-    <>
+    <div className="flex items-center justify-center md:justify-start flex-wrap">
       <div className="relative inline-flex">
         <span className="absolute inset-y-0 left-0 flex items-center pl-2">
           <div className="absolute flex items-center justify-center pointer-events-none">
@@ -50,8 +50,13 @@ const Form: React.FC<Props> = ({
           }
         />
       </div>
-      <button className="ml-5">Search</button>
-    </>
+      <button
+        className="ml-5 mt-3 md:mt-0 bg-primary py-1 px-8 rounded-md text-white font-bold"
+        onClick={() => submitHandler(value)}
+      >
+        Search
+      </button>
+    </div>
   );
 };
 
