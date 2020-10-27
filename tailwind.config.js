@@ -5,10 +5,13 @@ module.exports = {
       screens: {
         xs: { max: "400px" },
       },
+      fontFamily: {
+        sans: ["Montserrat", "sans-serif"],
+      },
       colors: {
         primary: "#E3350D",
         primaryGray: "#919191",
-        primaryRed: "",
+        secondaryGray: "#F2F1F0",
         primaryYellow: "",
         primaryBlue: "",
         primaryGreen: "",
