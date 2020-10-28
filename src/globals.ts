@@ -19,7 +19,7 @@ export const PokemonTypeColors = {
     medium: "#C4C4A4",
   },
   fire: {
-    light: "#F08030",
+    light: "#F4934D",
     medium: "#F08030",
   },
   fighting: {
@@ -35,7 +35,7 @@ export const PokemonTypeColors = {
     medium: "#A890F0",
   },
   grass: {
-    light: "#78C850",
+    light: "#99D07D",
     medium: "#78C850",
   },
   poison: {

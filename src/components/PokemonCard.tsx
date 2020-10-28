@@ -21,19 +21,39 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
       }}
       className="w-full rounded-lg overflow-hidden shadow-lg mx-auto"
     >
-      <div className="py-8 mx-auto w-full flex items-center justify-center">
-        <img
+      <div
+        className="py-32 mx-auto w-full flex items-center justify-center relative"
+        style={{
+          backgroundColor: backgroundColors[0].medium,
+        }}
+      >
+        <p className="text-6xl font-semibold text-black text-opacity-25 absolute tracking-xl top-1/8 pointer-events-none">
+          #{leftPad(id, 3)}
+        </p>
+
+        <div
+          className="inset-x-auto bottom-0 absolute z-20"
           style={{
-            backgroundColor: backgroundColors[0].medium,
+            width: 175,
+            height: 175,
           }}
-          className="w-48"
-          src={sprites.frontDefault}
-          alt={name}
-        />
+        >
+          <div
+            className="rounded-full absolute z-0 inset-x-auto mx-auto"
+            style={{
+              width: 130,
+              height: 130,
+              backgroundColor: backgroundColors[0].light,
+              zIndex: -10,
+              bottom: 8,
+              left: 16,
+            }}
+          />
+          <img src={sprites.frontDefault} alt={name} />
+        </div>
       </div>
 
       <div className="bg-white w-full pt-5 pb-8 text-center">
-        {/* <p className="text-lg font-medium">#{leftPad(id, 3)}</p> */}
         <h1 className="capitalize font-semibold text-3xl mb-2">{name}</h1>
         <div className="flex flex-wrap mx-auto justify-center">
           {types.map(({ type }, index) => {

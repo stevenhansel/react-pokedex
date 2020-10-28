@@ -1,9 +1,9 @@
 import React from "react";
 import PokemonForm from "../components/PokemonForm";
-import GenerationsButton from "../components/GenerationsButton";
 
 import Layout from "../components/Layout";
 import PokemonList from "../components/PokemonList";
+import LoadButton from "../components/LoadButton";
 
 const HomePage: React.FC = () => {
   const onSubmit = () => {};
@@ -19,8 +19,11 @@ const HomePage: React.FC = () => {
           />
         </div>
 
-        <div>
+        <div className="mx-auto w-full text-center">
           <PokemonList />
+          <div className="mt-8">
+            <LoadButton />
+          </div>
         </div>
       </div>
     </Layout>
