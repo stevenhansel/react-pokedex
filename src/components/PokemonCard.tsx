@@ -42,7 +42,7 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
                 key={`${id}-${type.name}`}
                 className={
                   "font-bold uppercase text-sm" +
-                  (index !== types.length - 1 ? " mr-4" : "")
+                  (index !== types.length - 1 ? " mr-6" : "")
                 }
                 style={{ color: backgroundColors[index].medium }}
               >

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoSearch } from "react-icons/go";
+import GenerationsButton from "./GenerationsButton";
 
 type Props = {
   submitHandler: (value: string) => void;
@@ -8,7 +9,7 @@ type Props = {
   changeHandler?: () => void;
 };
 
-const Form: React.FC<Props> = ({
+const PokemonForm: React.FC<Props> = ({
   placeholder,
   initialValue = "",
   changeHandler,
@@ -50,8 +51,13 @@ const Form: React.FC<Props> = ({
           }
         />
       </div>
+
+      <div className="ml-5 mt-3 md:mt-0">
+        <GenerationsButton />
+      </div>
+
       <button
-        className="ml-5 mt-3 md:mt-0 bg-primary py-1 px-8 rounded-md text-white font-bold"
+        className="ml-5 mt-3 md:mt-0 bg-primary py-1 px-8 rounded-md text-white font-semibold hover:bg-white hover:text-primary focus:outline-none transition duration-200 ease-in-out"
         onClick={() => submitHandler(value)}
       >
         Search
@@ -60,4 +66,4 @@ const Form: React.FC<Props> = ({
   );
 };
 
-export default Form;
+export default PokemonForm;
