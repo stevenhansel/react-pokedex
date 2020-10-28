@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ScaleLoader } from "react-spinners";
-import { Waypoint } from "react-waypoint";
 import { WrapReduxAsyncHandlerType } from "../features/utilities";
+import LoadButton from "./LoadButton";
 
 type Props = {
   paginationHandler: WrapReduxAsyncHandlerType;
@@ -23,15 +23,15 @@ const InfiniteScroll: React.FC<Props> = ({
 
   return (
     <div>
-      <div className="mx-auto w-3/4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3  gap-x-3 gap-y-6">
+      <div className="w-full mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-3 gap-y-6">
         {children}
       </div>
       <div className="py-16 mx-auto">
         {isLoading ? (
-          <ScaleLoader />
+          <ScaleLoader color="#E3350D" />
         ) : (
           <div className="mt-16">
-            <Waypoint onEnter={() => setPage((p) => p + 1)} />
+            <LoadButton clickHandler={() => setPage((p) => p + 1)} />
           </div>
         )}
       </div>

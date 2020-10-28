@@ -1,33 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 import { Pokemon } from "../features/pokemonSlice";
+import { PokemonTypeColors } from "../globals";
 import { leftPad } from "../utils/leftPad";
-import PokemonType from "./PokemonType";
 
 type Props = Pokemon;
 
-const PokemonTypeColors = {
-  normal: "#C4C4A4",
-  fire: "#F08030",
-  fighting: "#C03028",
-  water: "#6890F0",
-  flying: "#A890F0",
-  grass: "#78C850",
-  poison: "#A040A0",
-  electric: "#F8D030",
-  ground: "#E0C068",
-  psychic: "#F85888",
-  rock: "#B8A038",
-  ice: "#98D8D8",
-  bug: "#A8B820",
-  dragon: "#7038F8",
-  ghost: "#705898",
-  dark: "#705848",
-  steel: "#B8B8D0",
-  fairy: "#EE99AC",
-};
-
 const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
-  const [spriteState, setSpriteState] = useState<string>(sprites.frontDefault);
   const backgroundColors = types.map(({ type }) => {
     const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
       ([key, _]) => key === type.name
@@ -39,36 +17,57 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
   return (
     <div
       style={{
-        backgroundColor: backgroundColors[0],
+        backgroundColor: backgroundColors[0].medium,
       }}
       className="w-full rounded-lg overflow-hidden shadow-lg mx-auto"
     >
       <div
-        className="py-8 mx-auto w-full flex items-center justify-center"
-        onMouseEnter={() => setSpriteState(sprites.backDefault)}
-        onMouseLeave={() => setSpriteState(sprites.frontDefault)}
+        className="py-32 mx-auto w-full flex items-center justify-center relative"
+        style={{
+          backgroundColor: backgroundColors[0].medium,
+        }}
       >
-        <img
+        <p className="text-6xl font-semibold text-black text-opacity-25 absolute tracking-xl top-1/8 pointer-events-none">
+          #{leftPad(id, 3)}
+        </p>
+
+        <div
+          className="inset-x-auto bottom-0 absolute z-20"
           style={{
-            backgroundColor: backgroundColors[0],
+            width: 175,
+            height: 175,
           }}
-          className="w-48"
-          src={spriteState}
-          alt={name}
-        />
+        >
+          <div
+            className="rounded-full absolute z-0 inset-x-auto mx-auto"
+            style={{
+              width: 130,
+              height: 130,
+              backgroundColor: backgroundColors[0].light,
+              zIndex: -10,
+              bottom: 8,
+              left: 16,
+            }}
+          />
+          <img src={sprites.frontDefault} alt={name} />
+        </div>
       </div>
 
-      <div className="bg-white w-full pt-4 pb-8">
-        <p className="text-lg font-medium">#{leftPad(id, 3)}</p>
-        <h1 className="capitalize font-bold text-2xl mb-2">{name}</h1>
+      <div className="bg-white w-full pt-5 pb-8 text-center">
+        <h1 className="capitalize font-semibold text-3xl mb-2">{name}</h1>
         <div className="flex flex-wrap mx-auto justify-center">
           {types.map(({ type }, index) => {
             return (
-              <PokemonType
-                key={`${name}-${type.name}`}
-                type={type.name}
-                backgroundColor={backgroundColors[index]}
-              />
+              <p
+                key={`${id}-${type.name}`}
+                className={
+                  "font-bold uppercase text-sm" +
+                  (index !== types.length - 1 ? " mr-6" : "")
+                }
+                style={{ color: backgroundColors[index].medium }}
+              >
+                {type.name}
+              </p>
             );
           })}
         </div>

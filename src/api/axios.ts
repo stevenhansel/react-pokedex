@@ -27,5 +27,7 @@ export const createApiRequest = async (
     throw new Error(JSON.stringify({ statusCode, messages }));
   }
 };
+export const baseImageUrl =
+  "https://raw.githubusercontent.com/HybridShivam/Pokemon/master/assets/images/";
 
 export default axios;
