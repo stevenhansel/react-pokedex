@@ -15,7 +15,7 @@ export enum HTTP_METHODS {
 
 export const PokemonTypeColors = {
   normal: {
-    light: "#C4C4A4",
+    light: "#CDCDB9",
     medium: "#C4C4A4",
   },
   fire: {
@@ -23,15 +23,15 @@ export const PokemonTypeColors = {
     medium: "#F08030",
   },
   fighting: {
-    light: "#C03028",
+    light: "#BA5852",
     medium: "#C03028",
   },
   water: {
-    light: "#6890F0",
+    light: "#85A5F0",
     medium: "#6890F0",
   },
   flying: {
-    light: "#A890F0",
+    light: "#B8A5F2",
     medium: "#A890F0",
   },
   grass: {
@@ -39,51 +39,51 @@ export const PokemonTypeColors = {
     medium: "#78C850",
   },
   poison: {
-    light: "#A040A0",
+    light: "#A768A7",
     medium: "#A040A0",
   },
   electric: {
-    light: "#F8D030",
+    light: "#F9DF78",
     medium: "#F8D030",
   },
   ground: {
-    light: "#E0C068",
+    light: "#EDD081",
     medium: "#E0C068",
   },
   psychic: {
-    light: "#F85888",
+    light: "#F47DA1",
     medium: "#F85888",
   },
   rock: {
-    light: "#B8A038",
+    light: "#C5B059",
     medium: "#B8A038",
   },
   ice: {
-    light: "#98D8D8",
+    light: "#B3E1E1",
     medium: "#98D8D8",
   },
   bug: {
-    light: "#A8B820",
+    light: "#B5C534",
     medium: "#A8B820",
   },
   dragon: {
-    light: "#7038F8",
+    light: "#8656FA",
     medium: "#7038F8",
   },
   ghost: {
-    light: "#705898",
+    light: "#7D6B9B",
     medium: "#705898",
   },
   dark: {
-    light: "#705848",
+    light: "#756459",
     medium: "#705848",
   },
   steel: {
-    light: "#B8B8D0",
+    light: "#C1C1D1",
     medium: "#B8B8D0",
   },
   fairy: {
-    light: "#EE99AC",
+    light: "#EFA7B7",
     medium: "#EE99AC",
   },
 };

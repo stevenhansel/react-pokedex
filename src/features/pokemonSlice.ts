@@ -9,7 +9,7 @@ import { leftPad } from "../utils/leftPad";
 import { baseImageUrl } from "../api/axios";
 
 const INITIAL_SIZE = 6;
-const PAGINATE_SIZE = 1;
+const PAGINATE_SIZE = 3;
 
 export type Pokemon = {
   id: number;

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ScaleLoader } from "react-spinners";
 import { WrapReduxAsyncHandlerType } from "../features/utilities";
+import LoadButton from "./LoadButton";
 
 type Props = {
   paginationHandler: WrapReduxAsyncHandlerType;
@@ -17,7 +18,7 @@ const InfiniteScroll: React.FC<Props> = ({
   const [page, setPage] = useState(0);
 
   useEffect(() => {
-    // dispatch(paginationHandler({ page }));
+    dispatch(paginationHandler({ page }));
   }, [dispatch, page, paginationHandler]);
 
   return (
@@ -26,7 +27,13 @@ const InfiniteScroll: React.FC<Props> = ({
         {children}
       </div>
       <div className="py-16 mx-auto">
-        {isLoading ? <ScaleLoader /> : <div className="mt-16"></div>}
+        {isLoading ? (
+          <ScaleLoader color="#E3350D" />
+        ) : (
+          <div className="mt-16">
+            <LoadButton clickHandler={() => setPage((p) => p + 1)} />
+          </div>
+        )}
       </div>
     </div>
   );
