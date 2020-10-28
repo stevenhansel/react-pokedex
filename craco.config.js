@@ -1,7 +1,9 @@
+const { POSTCSS_MODES } = require("@craco/craco");
+
 module.exports = {
   style: {
     postcss: {
-      plugins: [require("tailwindcss")("./tailwind.config.js")],
+      mode: POSTCSS_MODES.file,
     },
   },
 };
