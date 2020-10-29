@@ -2,10 +2,37 @@ import React from "react";
 import { Pokemon } from "../features/pokemonSlice";
 import { PokemonTypeColors } from "../globals";
 import { leftPad } from "../utils/leftPad";
+import { useSpring, animated } from "react-spring";
 
-type Props = Pokemon;
+type Props = Pokemon & { position: number };
 
-const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
+const calc = (x: number, y: number, position: number) => {
+  let positionDivider: number = 2;
+  switch (position) {
+    case 0:
+      positionDivider = 4;
+      break;
+    case 1:
+      positionDivider = 2;
+      break;
+    case 2:
+      positionDivider = 1.5;
+      break;
+    default:
+      break;
+  }
+  return [
+    -(y - window.innerHeight / positionDivider) / 60,
+    (x - window.innerWidth / positionDivider) / 60,
+    1,
+  ];
+};
+
+const trans = (x: number, y: number, z: number) => {
+  return `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${z})`;
+};
+
+const PokemonCard = ({ id, name, sprites, types, position }: Props) => {
   const backgroundColors = types.map(({ type }) => {
     const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
       ([key, _]) => key === type.name
@@ -13,13 +40,25 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
 
     return backgroundColor;
   });
+  const [props, set] = useSpring(() => ({
+    xys: [0, 0, 1],
+    config: { mass: 8, tension: 350, friction: 40 },
+  }));
+
+  console.log(`position: ${position}`);
 
   return (
-    <div
+    <animated.div
+      onMouseMove={({ clientX: x, clientY: y }) =>
+        set({ xys: calc(x, y, position) })
+      }
+      onMouseLeave={() => set({ xys: [0, 0, 1] })}
       style={{
+        // @ts-ignore
+        transform: props.xys.interpolate(trans),
         backgroundColor: backgroundColors[0].medium,
       }}
-      className="w-full rounded-lg overflow-hidden shadow-lg mx-auto"
+      className="w-full rounded-lg overflow-hidden shadow-lg hover:shadow-xl mx-auto cursor-pointer transition-all duration-75 ease-in-out"
     >
       <div
         className="py-32 mx-auto w-full flex items-center justify-center relative"
@@ -72,7 +111,7 @@ const PokemonCard: React.FC<Props> = ({ id, name, sprites, types }) => {
           })}
         </div>
       </div>
-    </div>
+    </animated.div>
   );
 };
 

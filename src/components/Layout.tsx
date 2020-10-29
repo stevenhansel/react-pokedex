@@ -10,7 +10,11 @@ const Layout: React.FC<Props> = ({ children, title }) => {
   return (
     <div>
       <Helmet>
-        <title>React Pokedex {title && `| ${title}`}</title>
+        <title>React Pokédex {title && `| ${title}`}</title>
+        <meta
+          name="description"
+          content="a simple pokédex for your pokemon needs."
+        />
       </Helmet>
       <Navbar />
       {children}

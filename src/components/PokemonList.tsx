@@ -13,9 +13,17 @@ const PokemonList: React.FC = () => {
       paginationHandler={getPokemons}
       isLoading={pokemons.status.state === SliceStatus.LOADING}
     >
-      {pokemons.data.map((pokemon, index) => (
-        <PokemonCard key={pokemon.id} {...pokemon} />
-      ))}
+      {({ numCols }) => (
+        <>
+          {pokemons.data.map((pokemon, index) => (
+            <PokemonCard
+              key={pokemon.id}
+              {...pokemon}
+              position={index % numCols}
+            />
+          ))}
+        </>
+      )}
     </InfiniteScroll>
   );
 };
