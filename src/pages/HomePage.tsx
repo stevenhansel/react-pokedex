@@ -2,9 +2,14 @@ import React from "react";
 import PokemonForm from "../components/PokemonForm";
 
 import Layout from "../components/Layout";
-import PokemonList from "../components/PokemonList";
+import InfiniteScroll from "../components/InfiniteScroll";
+import PokemonCard from "../components/PokemonCard";
+import { useSelector } from "react-redux";
+import { pokemonsSelector, getPokemons } from "../features/pokemonSlice";
+import { SliceStatus } from "../globals";
 
-const HomePage: React.FC = () => {
+const HomePage = () => {
+  const pokemons = useSelector(pokemonsSelector);
   const onSubmit = () => {};
 
   return (
@@ -19,7 +24,22 @@ const HomePage: React.FC = () => {
         </div>
 
         <div className="mx-auto w-full text-center">
-          <PokemonList />
+          <InfiniteScroll
+            paginationHandler={getPokemons}
+            isLoading={pokemons.status.state === SliceStatus.LOADING}
+          >
+            {({ numCols }) => (
+              <>
+                {pokemons.data.map((pokemon, index) => (
+                  <PokemonCard
+                    key={pokemon.id}
+                    {...pokemon}
+                    position={index % numCols}
+                  />
+                ))}
+              </>
+            )}
+          </InfiniteScroll>
         </div>
       </div>
     </Layout>

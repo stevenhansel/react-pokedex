@@ -5,7 +5,7 @@ type Props = {
   clickHandler: () => void;
 };
 
-const LoadButton: React.FC<Props> = ({ clickHandler }) => {
+const LoadButton = ({ clickHandler }: Props) => {
   return (
     <button
       onClick={clickHandler}

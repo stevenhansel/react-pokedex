@@ -55,36 +55,34 @@ const PokemonGenerations = () => {
   );
 
   return (
-    <div>
-      <Modal>
-        <Modal.Button className="bg-primaryGray px-4 py-1 rounded-lg text-white hover:border-transparent focus:outline-none transform hover:-translate-y-1 hover:shadow transition-all duration-200 ease-in-out">
-          <div className="flex justify-between">
-            <PokemonIcon src={BulbasaurImage} alt="Bulbasaur" />
-            <PokemonIcon src={CharmanderImage} alt="Charmander" />
-            <PokemonIcon src={SquirtleImage} alt="Squirtle" />
-          </div>
-        </Modal.Button>
-        <Modal.Content title="Pokémon Generations">
-          <div className="mx-auto py-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-5 gap-y-6">
-            {generations.map((images, index) => (
-              <PokemonGenerationCard
-                key={`generations-${index}`}
-                images={images}
-                generation={index + 1}
-                isSelected={
-                  selectedGeneration === index && selectedGeneration !== null
-                }
-                handleClick={() =>
-                  setSelectedGeneration((previousIndex) =>
-                    previousIndex === index ? null : index
-                  )
-                }
-              />
-            ))}
-          </div>
-        </Modal.Content>
-      </Modal>
-    </div>
+    <Modal>
+      <Modal.Button className="bg-primaryGray px-4 py-1 rounded-lg text-white hover:border-transparent focus:outline-none transform hover:-translate-y-1 hover:shadow transition-all duration-200 ease-in-out">
+        <div className="flex justify-between">
+          <PokemonIcon src={BulbasaurImage} alt="Bulbasaur" />
+          <PokemonIcon src={CharmanderImage} alt="Charmander" />
+          <PokemonIcon src={SquirtleImage} alt="Squirtle" />
+        </div>
+      </Modal.Button>
+      <Modal.Content title="Pokémon Generations">
+        <div className="mx-auto py-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-5 gap-y-6">
+          {generations.map((images, index) => (
+            <PokemonGenerationCard
+              key={`generations-${index}`}
+              images={images}
+              generation={index + 1}
+              isSelected={
+                selectedGeneration === index && selectedGeneration !== null
+              }
+              handleClick={() =>
+                setSelectedGeneration((previousIndex) =>
+                  previousIndex === index ? null : index
+                )
+              }
+            />
+          ))}
+        </div>
+      </Modal.Content>
+    </Modal>
   );
 };
 export default PokemonGenerations;

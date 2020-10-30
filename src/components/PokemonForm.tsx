@@ -9,12 +9,12 @@ type Props = {
   changeHandler?: () => void;
 };
 
-const PokemonForm: React.FC<Props> = ({
+const PokemonForm = ({
   placeholder,
   initialValue = "",
   changeHandler,
   submitHandler,
-}) => {
+}: Props) => {
   const [value, setValue] = useState<string>(initialValue);
   const inputRef = useRef(0);
 

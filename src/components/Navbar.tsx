@@ -1,7 +1,7 @@
 import React from "react";
 import PokeballImage from "../assets/pokeball.png";
 
-const Navbar: React.FC = () => {
+const Navbar = () => {
   return (
     <div className="w-full bg-primary flex items-center justify-center py-2">
       <img

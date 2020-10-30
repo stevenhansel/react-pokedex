@@ -3,10 +3,11 @@ import { Helmet } from "react-helmet";
 import Navbar from "./Navbar";
 
 type Props = {
+  children: React.ReactNode;
   title?: string;
 };
 
-const Layout: React.FC<Props> = ({ children, title }) => {
+const Layout = ({ children, title }: Props) => {
   return (
     <div>
       <Helmet>

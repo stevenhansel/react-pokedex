@@ -5,7 +5,7 @@ type Props = {
   src: string;
 };
 
-const PokemonIcon: React.FC<Props> = ({ src, alt }) => {
+const PokemonIcon = ({ src, alt }: Props) => {
   return (
     <img
       src={src}
