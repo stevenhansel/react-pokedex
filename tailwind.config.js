@@ -18,6 +18,11 @@ module.exports = {
         "1/2": "50%",
         "3/4": "75%",
       },
+      spacing: {
+        72: "18rem",
+        84: "21rem",
+        96: "24rem",
+      },
       colors: {
         primary: "#E3350D",
         primaryGray: "#DEDEDE",
