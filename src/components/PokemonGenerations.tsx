@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import Modal from "./Modal";
 import PokemonGenerationCard from "./PokemonGenerationCard";
@@ -50,6 +50,10 @@ const generations = [
 ];
 
 const PokemonGenerations = () => {
+  const [selectedGeneration, setSelectedGeneration] = useState<number | null>(
+    null
+  );
+
   return (
     <div>
       <Modal>
@@ -60,13 +64,21 @@ const PokemonGenerations = () => {
             <PokemonIcon src={SquirtleImage} alt="Squirtle" />
           </div>
         </Modal.Button>
-        <Modal.Content>
+        <Modal.Content title="Pokémon Generations">
           <div className="mx-auto py-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-5 gap-y-6">
             {generations.map((images, index) => (
               <PokemonGenerationCard
                 key={`generations-${index}`}
                 images={images}
                 generation={index + 1}
+                isSelected={
+                  selectedGeneration === index && selectedGeneration !== null
+                }
+                handleClick={() =>
+                  setSelectedGeneration((previousIndex) =>
+                    previousIndex === index ? null : index
+                  )
+                }
               />
             ))}
           </div>

@@ -45,8 +45,6 @@ const PokemonCard = ({ id, name, sprites, types, position }: Props) => {
     config: { mass: 8, tension: 350, friction: 40 },
   }));
 
-  console.log(`position: ${position}`);
-
   return (
     <animated.div
       onMouseMove={({ clientX: x, clientY: y }) =>

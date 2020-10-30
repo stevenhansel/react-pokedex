@@ -24,9 +24,10 @@ const Button = ({ children, className }: ButtonProps) => {
 };
 
 type ContentProps = {
+  title?: string;
   children?: React.ReactNode;
 };
-const Content = ({ children }: ContentProps) => {
+const Content = ({ children, title }: ContentProps) => {
   const { showModal, setShowModal } = useContext(ModalContext);
   return showModal ? (
     <>
@@ -36,7 +37,7 @@ const Content = ({ children }: ContentProps) => {
           <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none">
             {/*header*/}
             <div className="flex items-start justify-between p-5 border-b border-solid border-gray-300 rounded-t">
-              <h3 className="text-3xl font-semibold">Generations</h3>
+              <h3 className="text-3xl font-semibold">{title || "Title"}</h3>
             </div>
             {/*body*/}
             <div className="relative p-6 flex-auto overflow-y-auto h-96">
@@ -72,7 +73,7 @@ type ModalProps = {
   children: React.ReactNode;
 };
 const Modal = ({ children }: ModalProps) => {
-  const [showModal, setShowModal] = useState<boolean>(true);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   return (
     <ModalContext.Provider value={{ showModal, setShowModal }}>
