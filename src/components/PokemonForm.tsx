@@ -1,6 +1,10 @@
 import React, { useEffect, useRef, useState } from "react";
 import { GoSearch } from "react-icons/go";
-import GenerationsButton from "./GenerationsButton";
+import Modal from "./Modal";
+import BulbasaurImage from "../assets/pokemons/bulbasaur.png";
+import CharmanderImage from "../assets/pokemons/charmander.png";
+import SquirtleImage from "../assets/pokemons/squirtle.png";
+import PokemonIcon from "./PokemonIcon";
 
 type Props = {
   submitHandler: (value: string) => void;
@@ -53,7 +57,16 @@ const PokemonForm: React.FC<Props> = ({
       </div>
 
       <div className="ml-5 mt-3 md:mt-0">
-        <GenerationsButton />
+        <Modal>
+          <Modal.Button className="bg-primaryGray px-4 py-1 rounded-lg text-white hover:border-transparent focus:outline-none transform hover:-translate-y-1 hover:shadow transition-all duration-200 ease-in-out">
+            <div className="flex justify-between">
+              <PokemonIcon src={BulbasaurImage} alt="Bulbasaur" />
+              <PokemonIcon src={CharmanderImage} alt="Charmander" />
+              <PokemonIcon src={SquirtleImage} alt="Squirtle" />
+            </div>
+          </Modal.Button>
+          <Modal.Content />
+        </Modal>
       </div>
 
       <button
