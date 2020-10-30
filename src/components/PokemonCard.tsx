@@ -4,26 +4,31 @@ import { PokemonTypeColors } from "../globals";
 import { leftPad } from "../utils/leftPad";
 import { useSpring, animated } from "react-spring";
 
-type Props = Pokemon & { position: number };
+type Props = Pokemon & { position: number; numCols: number };
 
-const calc = (x: number, y: number, position: number) => {
-  let positionDivider: number = 2;
-  switch (position) {
-    case 0:
-      positionDivider = 4;
-      break;
+const calc = (x: number, y: number, position: number, numCols: number) => {
+  let positionDivider: number = 0.5;
+
+  switch (numCols) {
     case 1:
-      positionDivider = 2;
+      positionDivider = 0.5;
       break;
     case 2:
-      positionDivider = 1.5;
+      if (position === 0) positionDivider = 0.3;
+      if (position === 1) positionDivider = 0.7;
+      break;
+    case 3:
+      if (position === 0) positionDivider = 0.25;
+      if (position === 1) positionDivider = 0.5;
+      if (position === 2) positionDivider = 0.75;
       break;
     default:
       break;
   }
+
   return [
-    -(y - window.innerHeight / positionDivider) / 60,
-    (x - window.innerWidth / positionDivider) / 60,
+    -(y - window.innerHeight * 0.5) / 50,
+    (x - window.innerWidth * positionDivider) / 50,
     1,
   ];
 };
@@ -32,7 +37,14 @@ const trans = (x: number, y: number, z: number) => {
   return `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${z})`;
 };
 
-const PokemonCard = ({ id, name, sprites, types, position }: Props) => {
+const PokemonCard = ({
+  id,
+  name,
+  sprites,
+  types,
+  position,
+  numCols,
+}: Props) => {
   const backgroundColors = types.map(({ type }) => {
     const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
       ([key, _]) => key === type.name
@@ -48,7 +60,7 @@ const PokemonCard = ({ id, name, sprites, types, position }: Props) => {
   return (
     <animated.div
       onMouseMove={({ clientX: x, clientY: y }) =>
-        set({ xys: calc(x, y, position) })
+        set({ xys: calc(x, y, position, numCols) })
       }
       onMouseLeave={() => set({ xys: [0, 0, 1] })}
       style={{

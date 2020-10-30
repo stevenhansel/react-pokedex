@@ -35,6 +35,7 @@ const HomePage = () => {
                     key={pokemon.id}
                     {...pokemon}
                     position={index % numCols}
+                    numCols={numCols}
                   />
                 ))}
               </>
