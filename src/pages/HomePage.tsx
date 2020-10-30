@@ -1,15 +1,28 @@
-import React from "react";
+import React, { useEffect } from "react";
 import PokemonForm from "../components/PokemonForm";
 
 import Layout from "../components/Layout";
 import InfiniteScroll from "../components/InfiniteScroll";
 import PokemonCard from "../components/PokemonCard";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { pokemonsSelector, getPokemons } from "../features/pokemonSlice";
 import { SliceStatus } from "../globals";
+import {
+  cachedPokemonsSelector,
+  getCachedPokemons,
+} from "../features/cachedPokemonsSlice";
 
 const HomePage = () => {
   const pokemons = useSelector(pokemonsSelector);
+  const cachedPokemons = useSelector(cachedPokemonsSelector);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCachedPokemons());
+    // eslint-disable-next-line
+  }, []);
+
   const onSubmit = () => {};
 
   return (
@@ -24,23 +37,27 @@ const HomePage = () => {
         </div>
 
         <div className="mx-auto w-full text-center">
-          <InfiniteScroll
-            paginationHandler={getPokemons}
-            isLoading={pokemons.status.state === SliceStatus.LOADING}
-          >
-            {({ numCols }) => (
-              <>
-                {pokemons.data.map((pokemon, index) => (
-                  <PokemonCard
-                    key={pokemon.id}
-                    {...pokemon}
-                    position={index % numCols}
-                    numCols={numCols}
-                  />
-                ))}
-              </>
-            )}
-          </InfiniteScroll>
+          {!(cachedPokemons.status.state === SliceStatus.LOADING) && (
+            <InfiniteScroll
+              paginationHandler={(page: number) =>
+                getPokemons({ page, cachedPokemons: cachedPokemons.data })
+              }
+              isLoading={pokemons.status.state === SliceStatus.LOADING}
+            >
+              {({ numCols }) => (
+                <>
+                  {pokemons.data.map((pokemon, index) => (
+                    <PokemonCard
+                      key={pokemon.id}
+                      {...pokemon}
+                      position={index % numCols}
+                      numCols={numCols}
+                    />
+                  ))}
+                </>
+              )}
+            </InfiniteScroll>
+          )}
         </div>
       </div>
     </Layout>

@@ -8,8 +8,7 @@ import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
 import { leftPad } from "../utils/leftPad";
 import { baseImageUrl } from "../api/axios";
 
-const INITIAL_SIZE = 3;
-const PAGINATE_SIZE = 3;
+export const PAGINATE_SIZE = 6;
 
 export type Pokemon = {
   id: number;
@@ -101,11 +100,8 @@ const statusHandler = { initialize, error, success };
 
 export const getPokemons = wrapReduxAsyncHandler(
   statusHandler,
-  async (dispatch, { page }) => {
-    const { results } = await fromApi.getPokemons(
-      INITIAL_SIZE,
-      page * PAGINATE_SIZE
-    );
+  async (dispatch, { page, cachedPokemons }) => {
+    const results = cachedPokemons.slice(page, page + PAGINATE_SIZE);
 
     const pokemons: Pokemon[] = [];
     for await (const { url } of results) {

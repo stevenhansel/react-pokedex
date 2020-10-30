@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { ScaleLoader } from "react-spinners";
-import { WrapReduxAsyncHandlerType } from "../features/utilities";
+import { PAGINATE_SIZE } from "../features/pokemonSlice";
 import useTailwindMediaQuery from "../hooks/useTailwindMediaQuery";
 import LoadButton from "./LoadButton";
 
 type Props = {
   children: ({ numCols }: { numCols: number }) => React.ReactNode;
-  paginationHandler: WrapReduxAsyncHandlerType;
+  paginationHandler: (
+    page: number
+  ) => (dispatch: React.Dispatch<any>) => Promise<void>;
   isLoading: boolean;
 };
 
@@ -18,11 +20,18 @@ const InfiniteScroll = ({ children, paginationHandler, isLoading }: Props) => {
   const { isSmall, isLarge } = useTailwindMediaQuery();
 
   useEffect(() => {
-    dispatch(paginationHandler({ page }));
-  }, [dispatch, page, paginationHandler]);
+    dispatch(paginationHandler(0));
+    //eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    dispatch(paginationHandler(page));
+    //eslint-disable-next-line
+  }, [page]);
 
   useEffect(() => {
     let col: number;
+
     if (isSmall) {
       col = 2;
     }
@@ -45,7 +54,11 @@ const InfiniteScroll = ({ children, paginationHandler, isLoading }: Props) => {
           <ScaleLoader color="#E3350D" />
         ) : (
           <div className="mt-16">
-            <LoadButton clickHandler={() => setPage((p) => p + 1)} />
+            <LoadButton
+              clickHandler={() => {
+                setPage(page + PAGINATE_SIZE);
+              }}
+            />
           </div>
         )}
       </div>
