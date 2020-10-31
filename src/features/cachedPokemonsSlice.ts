@@ -5,7 +5,7 @@ import { RootState } from "./store";
 import { NamedAPIResource } from "./types";
 import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
 
-export enum PokemonGenerations {
+export enum PokemonGenerationsEnum {
   GENERATION_1 = 151,
   GENERATION_2 = 251,
   GENERATION_3 = 386,
@@ -63,7 +63,7 @@ export const getCachedPokemons = wrapReduxAsyncHandler(
     const {
       results,
     }: { results: NamedAPIResource[] } = await fromApi.getPokemons(
-      PokemonGenerations.GENERATION_7
+      PokemonGenerationsEnum.GENERATION_7
     );
     dispatch(getCachedPokemonsReducer({ cachedPokemons: results }));
   }

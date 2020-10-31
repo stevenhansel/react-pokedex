@@ -7,6 +7,8 @@ import { useSpring, animated } from "react-spring";
 type Props = Pokemon & { position: number; numCols: number };
 
 const calc = (x: number, y: number, position: number, numCols: number) => {
+  const WINDOW_DIVIDER = 50;
+  const Y_DIVIDER = 0.5;
   let positionDivider: number = 0.5;
 
   switch (numCols) {
@@ -27,8 +29,8 @@ const calc = (x: number, y: number, position: number, numCols: number) => {
   }
 
   return [
-    -(y - window.innerHeight * 0.5) / 50,
-    (x - window.innerWidth * positionDivider) / 50,
+    -(y - window.innerHeight * Y_DIVIDER) / WINDOW_DIVIDER,
+    (x - window.innerWidth * positionDivider) / WINDOW_DIVIDER,
     1,
   ];
 };

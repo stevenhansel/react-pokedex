@@ -22,9 +22,11 @@ export const createApiRequest = async (
     });
     return response.data;
   } catch (err) {
-    const statusCode = err.response.status;
-    const messages = err.response.data.data[0].messages;
-    throw new Error(JSON.stringify({ statusCode, messages }));
+    console.error(err);
+    throw new Error(err);
+    // const statusCode = err.response.status;
+    // const messages = err.response.data.data[0].messages;
+    // throw new Error(JSON.stringify({ statusCode, messages }));
   }
 };
 export const baseImageUrl =

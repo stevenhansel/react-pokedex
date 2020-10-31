@@ -1,5 +1,5 @@
 import React from "react";
-import { Helmet } from "react-helmet";
+import { Helmet } from "react-helmet-async";
 import Navbar from "./Navbar";
 
 type Props = {
@@ -11,6 +11,7 @@ const Layout = ({ children, title }: Props) => {
   return (
     <div>
       <Helmet>
+        <meta charSet="utf-8" />
         <title>React Pokédex {title && `| ${title}`}</title>
         <meta
           name="description"

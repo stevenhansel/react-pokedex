@@ -120,8 +120,3 @@ export const getPokemons = wrapReduxAsyncHandler(
     dispatch(getPokemonsReducer({ pokemons }));
   }
 );
-
-export const getPokemonByName = wrapReduxAsyncHandler(
-  statusHandler,
-  async (dispatch, { name }) => {}
-);

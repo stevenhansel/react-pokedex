@@ -3,7 +3,9 @@ import { useDispatch } from "react-redux";
 import { ScaleLoader } from "react-spinners";
 import { PAGINATE_SIZE } from "../features/pokemonSlice";
 import useTailwindMediaQuery from "../hooks/useTailwindMediaQuery";
+import { randomize } from "../utils/randomize";
 import LoadButton from "./LoadButton";
+import { PokemonGenerationsEnum } from "../features/cachedPokemonsSlice";
 
 type Props = {
   children: ({ numCols }: { numCols: number }) => React.ReactNode;
@@ -15,17 +17,16 @@ type Props = {
 
 const InfiniteScroll = ({ children, paginationHandler, isLoading }: Props) => {
   const dispatch = useDispatch();
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState(
+    randomize(0, PokemonGenerationsEnum.GENERATION_7 - PAGINATE_SIZE)
+  );
   const [numCols, setNumCols] = useState(1);
   const { isSmall, isLarge } = useTailwindMediaQuery();
 
   useEffect(() => {
-    dispatch(paginationHandler(0));
-    //eslint-disable-next-line
-  }, []);
-
-  useEffect(() => {
+    /** Initialize First Pokemon List */
     dispatch(paginationHandler(page));
+
     //eslint-disable-next-line
   }, [page]);
 
