@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
-import { ScaleLoader } from "react-spinners";
 import { PAGINATE_SIZE } from "../features/pokemonSlice";
 import useTailwindMediaQuery from "../hooks/useTailwindMediaQuery";
 import { randomize } from "../utils/randomize";
@@ -21,12 +20,12 @@ const InfiniteScroll = ({ children, paginationHandler, isLoading }: Props) => {
     randomize(0, PokemonGenerationsEnum.GENERATION_7 - PAGINATE_SIZE)
   );
   const [numCols, setNumCols] = useState(1);
+
   const { isSmall, isLarge } = useTailwindMediaQuery();
 
   useEffect(() => {
     /** Initialize First Pokemon List */
     dispatch(paginationHandler(page));
-
     //eslint-disable-next-line
   }, [page]);
 
@@ -50,10 +49,9 @@ const InfiniteScroll = ({ children, paginationHandler, isLoading }: Props) => {
       <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-6">
         {children({ numCols })}
       </div>
+
       <div className="py-16 mx-auto">
-        {isLoading ? (
-          <ScaleLoader color="#E3350D" />
-        ) : (
+        {isLoading ? null : (
           <div className="mt-16">
             <LoadButton
               clickHandler={() => {

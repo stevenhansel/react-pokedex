@@ -3,8 +3,12 @@ import { Pokemon } from "../features/pokemonSlice";
 import { PokemonTypeColors } from "../globals";
 import { leftPad } from "../utils/leftPad";
 import { useSpring, animated } from "react-spring";
+import Trail from "./Trail";
 
-type Props = Pokemon & { position: number; numCols: number };
+type Props = Pokemon & {
+  position: number;
+  numCols: number;
+};
 
 const calc = (x: number, y: number, position: number, numCols: number) => {
   const WINDOW_DIVIDER = 50;
@@ -54,70 +58,74 @@ const PokemonCard = React.memo(
     }));
 
     return (
-      <animated.div
-        onMouseMove={({ clientX: x, clientY: y }) =>
-          set({ xys: calc(x, y, position, numCols) })
-        }
-        onMouseLeave={() => set({ xys: [0, 0, 1] })}
-        style={{
-          // @ts-ignore
-          transform: props.xys.interpolate(trans),
-          backgroundColor: backgroundColors[0].medium,
-        }}
-        className="w-full rounded-lg overflow-hidden shadow-lg hover:shadow-xl mx-auto cursor-pointer transition-all duration-75 ease-in-out"
+      <Trail
+        open={true}
+        className="w-full rounded-lg overflow-hidden shadow-lg mx-auto cursor-pointer hover:shadow-2xl transition-all duration-75 ease-in-out"
       >
-        <div
-          className="py-32 mx-auto w-full flex items-center justify-center relative"
+        <animated.div
+          onMouseMove={({ clientX: x, clientY: y }) =>
+            set({ xys: calc(x, y, position, numCols) })
+          }
+          onMouseLeave={() => set({ xys: [0, 0, 1] })}
           style={{
+            // @ts-ignore
+            transform: props.xys.interpolate(trans),
             backgroundColor: backgroundColors[0].medium,
           }}
         >
-          <p className="text-6xl font-semibold text-black text-opacity-25 absolute tracking-xl top-1/8 pointer-events-none">
-            #{leftPad(id, 3)}
-          </p>
-
           <div
-            className="inset-x-auto bottom-0 absolute z-20"
+            className="py-32 mx-auto w-full flex items-center justify-center relative"
             style={{
-              width: 175,
-              height: 175,
+              backgroundColor: backgroundColors[0].medium,
             }}
           >
-            <div
-              className="rounded-full absolute z-0 inset-x-auto mx-auto"
-              style={{
-                width: 130,
-                height: 130,
-                backgroundColor: backgroundColors[0].light,
-                zIndex: -10,
-                bottom: 8,
-                left: 16,
-              }}
-            />
-            <img src={sprites.frontDefault} alt={name} />
-          </div>
-        </div>
+            <p className="text-6xl font-semibold text-black text-opacity-25 absolute tracking-xl top-1/8 pointer-events-none">
+              #{leftPad(id, 3)}
+            </p>
 
-        <div className="bg-white w-full pt-5 pb-8 text-center">
-          <h1 className="capitalize font-semibold text-3xl mb-2">{name}</h1>
-          <div className="flex flex-wrap mx-auto justify-center">
-            {types.map(({ type }, index) => {
-              return (
-                <p
-                  key={`${id}-${type.name}`}
-                  className={
-                    "font-bold uppercase text-sm" +
-                    (index !== types.length - 1 ? " mr-6" : "")
-                  }
-                  style={{ color: backgroundColors[index].medium }}
-                >
-                  {type.name}
-                </p>
-              );
-            })}
+            <div
+              className="inset-x-auto bottom-0 absolute z-20"
+              style={{
+                width: 175,
+                height: 175,
+              }}
+            >
+              <div
+                className="rounded-full absolute z-0 inset-x-auto mx-auto"
+                style={{
+                  width: 130,
+                  height: 130,
+                  backgroundColor: backgroundColors[0].light,
+                  zIndex: -10,
+                  bottom: 8,
+                  left: 16,
+                }}
+              />
+              <img src={sprites.frontDefault} alt={name} loading="lazy" />
+            </div>
           </div>
-        </div>
-      </animated.div>
+
+          <div className="bg-white w-full pt-5 pb-8 text-center">
+            <h1 className="capitalize font-semibold text-3xl mb-2">{name}</h1>
+            <div className="flex flex-wrap mx-auto justify-center">
+              {types.map(({ type }, index) => {
+                return (
+                  <p
+                    key={`${id}-${type.name}`}
+                    className={
+                      "font-bold uppercase text-sm" +
+                      (index !== types.length - 1 ? " mr-6" : "")
+                    }
+                    style={{ color: backgroundColors[index].medium }}
+                  >
+                    {type.name}
+                  </p>
+                );
+              })}
+            </div>
+          </div>
+        </animated.div>
+      </Trail>
     );
   },
   (previousProps, nextProps) => previousProps.id === nextProps.id

@@ -37,7 +37,10 @@ const HomePage = () => {
         </div>
 
         <div className="mx-auto w-full text-center">
-          {!(cachedPokemons.status.state === SliceStatus.LOADING) && (
+          {!(
+            cachedPokemons.status.state === SliceStatus.LOADING ||
+            cachedPokemons.status.state === SliceStatus.IDLE
+          ) && (
             <InfiniteScroll
               paginationHandler={(page: number) =>
                 getPokemons({ page, cachedPokemons: cachedPokemons.data })
@@ -46,14 +49,18 @@ const HomePage = () => {
             >
               {({ numCols }) => (
                 <>
-                  {pokemons.data.map((pokemon, index) => (
-                    <PokemonCard
-                      key={pokemon.id}
-                      {...pokemon}
-                      position={index % numCols}
-                      numCols={numCols}
-                    />
-                  ))}
+                  {pokemons.data.map((pokemon, index) =>
+                    pokemon === null ? (
+                      <div key={`loading-${index}`}>Loading</div>
+                    ) : (
+                      <PokemonCard
+                        key={pokemon.id}
+                        {...pokemon}
+                        position={index % numCols}
+                        numCols={numCols}
+                      />
+                    )
+                  )}
                 </>
               )}
             </InfiniteScroll>
