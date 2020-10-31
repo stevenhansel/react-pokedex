@@ -4,6 +4,7 @@ import { SliceStatus } from "../globals";
 import { RootState } from "./store";
 import { NamedAPIResource } from "./types";
 import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
+import Levenshtein from "fast-levenshtein";
 
 export enum PokemonGenerationsEnum {
   GENERATION_1 = 151,
@@ -16,7 +17,7 @@ export enum PokemonGenerationsEnum {
 }
 
 type SliceState = {
-  data: NamedAPIResource[];
+  data: (NamedAPIResource & { distance: number })[];
   status: {
     state: SliceStatus;
   };
@@ -39,7 +40,26 @@ const cachedPokemonsSlice = createSlice({
       action: PayloadAction<{ cachedPokemons: NamedAPIResource[] }>
     ) {
       const { cachedPokemons } = action.payload;
-      state.data = cachedPokemons;
+      state.data = cachedPokemons.map((pokemon) => {
+        return {
+          ...pokemon,
+          distance: 0,
+        };
+      });
+    },
+    searchPokemonsByNameReducer(
+      state,
+      action: PayloadAction<{ pokemonName: string }>
+    ) {
+      const { pokemonName } = action.payload;
+      state.data = state.data
+        .map((pokemon) => {
+          return {
+            ...pokemon,
+            distance: Levenshtein.get(pokemon.name, pokemonName),
+          };
+        })
+        .sort((a, b) => a.distance - b.distance);
     },
   },
 });
@@ -50,6 +70,7 @@ export const {
   error,
   success,
   getCachedPokemonsReducer,
+  searchPokemonsByNameReducer,
 } = cachedPokemonsSlice.actions;
 
 const statusHandler = { initialize, error, success };

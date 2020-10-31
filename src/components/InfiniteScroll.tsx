@@ -5,6 +5,7 @@ import useTailwindMediaQuery from "../hooks/useTailwindMediaQuery";
 import { randomize } from "../utils/randomize";
 import LoadButton from "./LoadButton";
 import { PokemonGenerationsEnum } from "../features/cachedPokemonsSlice";
+import useTrigger from "../hooks/useTrigger";
 
 type ContextType = {
   page: number;
@@ -15,6 +16,8 @@ type ContextType = {
   paginationHandler: (
     page: number
   ) => (dispatch: React.Dispatch<any>) => Promise<void>;
+  listener: number;
+  trigger: () => void;
 };
 const InfiniteScrollContext = createContext<ContextType>({
   page: 0,
@@ -23,6 +26,8 @@ const InfiniteScrollContext = createContext<ContextType>({
   setNumCols: () => {},
   isLoading: true,
   paginationHandler: getPokemons,
+  listener: 0,
+  trigger: () => {},
 });
 
 type ButtonProps = {};
@@ -48,14 +53,15 @@ type ContainerProps = {
 };
 const Container = ({ children }: ContainerProps) => {
   const dispatch = useDispatch();
-  const { numCols, paginationHandler, page } = useContext(
+
+  const { numCols, paginationHandler, page, listener } = useContext(
     InfiniteScrollContext
   );
 
   useEffect(() => {
     dispatch(paginationHandler(page));
     //eslint-disable-next-line
-  }, [page]);
+  }, [listener, page]);
 
   return (
     <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-5 gap-y-6">
@@ -67,8 +73,10 @@ const Container = ({ children }: ContainerProps) => {
 type InfiniteScrollProps = {
   children: ({
     resetPage,
+    trigger,
   }: {
     resetPage: React.Dispatch<React.SetStateAction<number>>;
+    trigger: () => void;
   }) => React.ReactNode;
   paginationHandler: (
     page: number
@@ -82,7 +90,7 @@ const InfiniteScroll = ({
   isLoading,
 }: InfiniteScrollProps) => {
   const { isSmall, isLarge } = useTailwindMediaQuery();
-
+  const { listener, trigger } = useTrigger();
   const [page, setPage] = useState(
     randomize(0, PokemonGenerationsEnum.GENERATION_7 - PAGINATE_SIZE)
   );
@@ -103,8 +111,6 @@ const InfiniteScroll = ({
     setNumCols(col);
   }, [isSmall, isLarge]);
 
-  const resetPage = () => setPage(0);
-
   return (
     <InfiniteScrollContext.Provider
       value={{
@@ -114,9 +120,11 @@ const InfiniteScroll = ({
         setNumCols,
         isLoading,
         paginationHandler,
+        listener,
+        trigger,
       }}
     >
-      {children({ resetPage })}
+      {children({ resetPage: setPage, trigger })}
     </InfiniteScrollContext.Provider>
   );
 };

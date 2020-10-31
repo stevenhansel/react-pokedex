@@ -24,8 +24,6 @@ const PokemonsPage = () => {
     // eslint-disable-next-line
   }, []);
 
-  const onSubmit = () => {};
-
   return (
     <Layout title="Home">
       <div className="px-6 md:px-24 lg:px-64 mt-6 md:mt-10">
@@ -39,12 +37,13 @@ const PokemonsPage = () => {
           }
           isLoading={pokemons.status.state === SliceStatus.LOADING}
         >
-          {({ resetPage }) => (
+          {({ resetPage, trigger }) => (
             <>
               <div className="my-4 md:my-6 lg:my-8 w-full">
                 <PokemonForm
-                  submitHandler={onSubmit}
                   placeholder="Search for a pokémon..."
+                  resetPage={resetPage}
+                  trigger={trigger}
                 />
               </div>
               <div className="mx-auto w-full text-center">

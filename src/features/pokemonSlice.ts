@@ -72,7 +72,6 @@ const pokemonsSlice = createSlice({
       const { size } = action.payload;
       const nullValues = new Array<null>(size).fill(null);
       if (state.data.length === 0) {
-        console.log("a");
         state.data = nullValues;
       } else {
         console.log("b");
@@ -93,6 +92,9 @@ const pokemonsSlice = createSlice({
         state.data[state.data.length - (size - index)] = pokemon;
       }
     },
+    resetPokemonsReducer(state, action) {
+      state.data = [];
+    },
   },
 });
 
@@ -103,6 +105,7 @@ export const {
   success,
   initializePokemonsReducer,
   getPokemonsReducer,
+  resetPokemonsReducer,
 } = pokemonsSlice.actions;
 
 export const pokemonsSelector = (state: RootState) => state.pokemons;
