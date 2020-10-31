@@ -29,46 +29,55 @@ const PokemonsPage = () => {
   return (
     <Layout title="Home">
       <div className="px-6 md:px-24 lg:px-64 mt-6 md:mt-10">
-        <h1 className="text-3xl lg:text-5xl font-semibold">React Pokédex</h1>
-        <div className="my-4 md:my-6 lg:my-8 w-full">
-          <PokemonForm
-            submitHandler={onSubmit}
-            placeholder="Search for a pokémon..."
-          />
-        </div>
+        <h1 className="text-3xl lg:text-5xl font-semibold text-center sm:text-left">
+          React Pokédex
+        </h1>
 
-        <div className="mx-auto w-full text-center">
-          {!(
-            cachedPokemons.status.state === SliceStatus.LOADING ||
-            cachedPokemons.status.state === SliceStatus.IDLE
-          ) && (
-            <InfiniteScroll
-              paginationHandler={(page: number) =>
-                getPokemons({ page, cachedPokemons: cachedPokemons.data })
-              }
-              isLoading={pokemons.status.state === SliceStatus.LOADING}
-            >
-              {({ numCols }) => (
-                <>
-                  {pokemons.data.map((pokemon, index) =>
-                    pokemon === null ? (
-                      <div key={`loading-${index}`}>
-                        <PokemonSkeleton />
-                      </div>
-                    ) : (
-                      <PokemonCard
-                        key={pokemon.id}
-                        {...pokemon}
-                        position={index % numCols}
-                        numCols={numCols}
-                      />
-                    )
-                  )}
-                </>
-              )}
-            </InfiniteScroll>
+        <InfiniteScroll
+          paginationHandler={(page: number) =>
+            getPokemons({ page, cachedPokemons: cachedPokemons.data })
+          }
+          isLoading={pokemons.status.state === SliceStatus.LOADING}
+        >
+          {({ resetPage }) => (
+            <>
+              <div className="my-4 md:my-6 lg:my-8 w-full">
+                <PokemonForm
+                  submitHandler={onSubmit}
+                  placeholder="Search for a pokémon..."
+                />
+              </div>
+              <div className="mx-auto w-full text-center">
+                {!(
+                  cachedPokemons.status.state === SliceStatus.LOADING ||
+                  cachedPokemons.status.state === SliceStatus.IDLE
+                ) && (
+                  <InfiniteScroll.Container>
+                    {({ numCols }) => (
+                      <>
+                        {pokemons.data.map((pokemon, index) =>
+                          pokemon === null ? (
+                            <div key={`loading-${index}`}>
+                              <PokemonSkeleton />
+                            </div>
+                          ) : (
+                            <PokemonCard
+                              key={pokemon.id}
+                              {...pokemon}
+                              position={index % numCols}
+                              numCols={numCols}
+                            />
+                          )
+                        )}
+                      </>
+                    )}
+                  </InfiniteScroll.Container>
+                )}
+                <InfiniteScroll.Button />
+              </div>
+            </>
           )}
-        </div>
+        </InfiniteScroll>
       </div>
     </Layout>
   );
