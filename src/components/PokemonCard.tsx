@@ -39,92 +39,88 @@ const trans = (x: number, y: number, z: number) => {
   return `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${z})`;
 };
 
-const PokemonCard = ({
-  id,
-  name,
-  sprites,
-  types,
-  position,
-  numCols,
-}: Props) => {
-  const backgroundColors = types.map(({ type }) => {
-    const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
-      ([key, _]) => key === type.name
-    );
+const PokemonCard = React.memo(
+  ({ id, name, sprites, types, position, numCols }: Props) => {
+    const backgroundColors = types.map(({ type }) => {
+      const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
+        ([key, _]) => key === type.name
+      );
 
-    return backgroundColor;
-  });
-  const [props, set] = useSpring(() => ({
-    xys: [0, 0, 1],
-    config: { mass: 8, tension: 350, friction: 40 },
-  }));
+      return backgroundColor;
+    });
+    const [props, set] = useSpring(() => ({
+      xys: [0, 0, 1],
+      config: { mass: 8, tension: 350, friction: 40 },
+    }));
 
-  return (
-    <animated.div
-      onMouseMove={({ clientX: x, clientY: y }) =>
-        set({ xys: calc(x, y, position, numCols) })
-      }
-      onMouseLeave={() => set({ xys: [0, 0, 1] })}
-      style={{
-        // @ts-ignore
-        transform: props.xys.interpolate(trans),
-        backgroundColor: backgroundColors[0].medium,
-      }}
-      className="w-full rounded-lg overflow-hidden shadow-lg hover:shadow-xl mx-auto cursor-pointer transition-all duration-75 ease-in-out"
-    >
-      <div
-        className="py-32 mx-auto w-full flex items-center justify-center relative"
+    return (
+      <animated.div
+        onMouseMove={({ clientX: x, clientY: y }) =>
+          set({ xys: calc(x, y, position, numCols) })
+        }
+        onMouseLeave={() => set({ xys: [0, 0, 1] })}
         style={{
+          // @ts-ignore
+          transform: props.xys.interpolate(trans),
           backgroundColor: backgroundColors[0].medium,
         }}
+        className="w-full rounded-lg overflow-hidden shadow-lg hover:shadow-xl mx-auto cursor-pointer transition-all duration-75 ease-in-out"
       >
-        <p className="text-6xl font-semibold text-black text-opacity-25 absolute tracking-xl top-1/8 pointer-events-none">
-          #{leftPad(id, 3)}
-        </p>
-
         <div
-          className="inset-x-auto bottom-0 absolute z-20"
+          className="py-32 mx-auto w-full flex items-center justify-center relative"
           style={{
-            width: 175,
-            height: 175,
+            backgroundColor: backgroundColors[0].medium,
           }}
         >
-          <div
-            className="rounded-full absolute z-0 inset-x-auto mx-auto"
-            style={{
-              width: 130,
-              height: 130,
-              backgroundColor: backgroundColors[0].light,
-              zIndex: -10,
-              bottom: 8,
-              left: 16,
-            }}
-          />
-          <img src={sprites.frontDefault} alt={name} />
-        </div>
-      </div>
+          <p className="text-6xl font-semibold text-black text-opacity-25 absolute tracking-xl top-1/8 pointer-events-none">
+            #{leftPad(id, 3)}
+          </p>
 
-      <div className="bg-white w-full pt-5 pb-8 text-center">
-        <h1 className="capitalize font-semibold text-3xl mb-2">{name}</h1>
-        <div className="flex flex-wrap mx-auto justify-center">
-          {types.map(({ type }, index) => {
-            return (
-              <p
-                key={`${id}-${type.name}`}
-                className={
-                  "font-bold uppercase text-sm" +
-                  (index !== types.length - 1 ? " mr-6" : "")
-                }
-                style={{ color: backgroundColors[index].medium }}
-              >
-                {type.name}
-              </p>
-            );
-          })}
+          <div
+            className="inset-x-auto bottom-0 absolute z-20"
+            style={{
+              width: 175,
+              height: 175,
+            }}
+          >
+            <div
+              className="rounded-full absolute z-0 inset-x-auto mx-auto"
+              style={{
+                width: 130,
+                height: 130,
+                backgroundColor: backgroundColors[0].light,
+                zIndex: -10,
+                bottom: 8,
+                left: 16,
+              }}
+            />
+            <img src={sprites.frontDefault} alt={name} />
+          </div>
         </div>
-      </div>
-    </animated.div>
-  );
-};
+
+        <div className="bg-white w-full pt-5 pb-8 text-center">
+          <h1 className="capitalize font-semibold text-3xl mb-2">{name}</h1>
+          <div className="flex flex-wrap mx-auto justify-center">
+            {types.map(({ type }, index) => {
+              return (
+                <p
+                  key={`${id}-${type.name}`}
+                  className={
+                    "font-bold uppercase text-sm" +
+                    (index !== types.length - 1 ? " mr-6" : "")
+                  }
+                  style={{ color: backgroundColors[index].medium }}
+                >
+                  {type.name}
+                </p>
+              );
+            })}
+          </div>
+        </div>
+      </animated.div>
+    );
+  },
+  (previousProps, nextProps) => previousProps.id === nextProps.id
+);
 
 export default PokemonCard;
