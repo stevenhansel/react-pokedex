@@ -1,11 +1,11 @@
 import React, { useEffect, useState, useContext, createContext } from "react";
 import { useDispatch } from "react-redux";
 import { getPokemons, PAGINATE_SIZE } from "../features/pokemonSlice";
-import useTailwindMediaQuery from "../hooks/useTailwindMediaQuery";
-import { randomize } from "../utils/randomize";
-import LoadButton from "./LoadButton";
 import { PokemonGenerationsEnum } from "../features/cachedPokemonsSlice";
+import useTailwindMediaQuery from "../hooks/useTailwindMediaQuery";
+import LoadButton from "./LoadButton";
 import useTrigger from "../hooks/useTrigger";
+import { randomize } from "../utils/randomize";
 
 type ContextType = {
   page: number;
@@ -30,7 +30,6 @@ const InfiniteScrollContext = createContext<ContextType>({
   trigger: () => {},
 });
 
-type ButtonProps = {};
 const Button = () => {
   const { isLoading, setPage, page } = useContext(InfiniteScrollContext);
   return (
@@ -72,10 +71,10 @@ const Container = ({ children }: ContainerProps) => {
 
 type InfiniteScrollProps = {
   children: ({
-    resetPage,
+    mutatePage: resetPage,
     trigger,
   }: {
-    resetPage: React.Dispatch<React.SetStateAction<number>>;
+    mutatePage: React.Dispatch<React.SetStateAction<number>>;
     trigger: () => void;
   }) => React.ReactNode;
   paginationHandler: (
@@ -92,7 +91,7 @@ const InfiniteScroll = ({
   const { isSmall, isLarge } = useTailwindMediaQuery();
   const { listener, trigger } = useTrigger();
   const [page, setPage] = useState(
-    randomize(0, PokemonGenerationsEnum.GENERATION_7 - PAGINATE_SIZE)
+    randomize(0, Number(PokemonGenerationsEnum.GENERATION_7) - PAGINATE_SIZE)
   );
   const [numCols, setNumCols] = useState(1);
 
@@ -124,7 +123,7 @@ const InfiniteScroll = ({
         trigger,
       }}
     >
-      {children({ resetPage: setPage, trigger })}
+      {children({ mutatePage: setPage, trigger })}
     </InfiniteScrollContext.Provider>
   );
 };

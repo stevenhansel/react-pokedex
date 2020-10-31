@@ -37,12 +37,12 @@ const PokemonsPage = () => {
           }
           isLoading={pokemons.status.state === SliceStatus.LOADING}
         >
-          {({ resetPage, trigger }) => (
+          {({ mutatePage, trigger }) => (
             <>
               <div className="my-4 md:my-6 lg:my-8 w-full">
                 <PokemonForm
                   placeholder="Search for a pokémon..."
-                  resetPage={resetPage}
+                  mutatePage={mutatePage}
                   trigger={trigger}
                 />
               </div>

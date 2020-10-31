@@ -1,10 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 
 import Modal from "./Modal";
 import PokemonGenerationCard from "./PokemonGenerationCard";
 import PokemonIcon from "./PokemonIcon";
 
 import { importPokemonImage } from "../globals";
+import { PokemonGenerationsEnum } from "../features/cachedPokemonsSlice";
 
 const generations = [
   [
@@ -44,10 +45,32 @@ const generations = [
   ],
 ];
 
-const PokemonGenerations = () => {
-  const [selectedGeneration, setSelectedGeneration] = useState<number | null>(
-    null
-  );
+type Props = {
+  selectedGeneration: PokemonGenerationsEnum | null;
+  setSelectedGeneration: React.Dispatch<
+    React.SetStateAction<PokemonGenerationsEnum | null>
+  >;
+  changeGenerationHandler: () => void;
+};
+
+const PokemonGenerations = ({
+  selectedGeneration,
+  setSelectedGeneration,
+  changeGenerationHandler,
+}: Props) => {
+  const indexToPokemonGenerations = (
+    realIndex: number
+  ): PokemonGenerationsEnum | null => {
+    const generations = Object.entries(PokemonGenerationsEnum);
+    let selectedEnum: PokemonGenerationsEnum | null = null;
+
+    generations.forEach(([_, b], index) => {
+      if (index === realIndex) {
+        selectedEnum = b;
+      }
+    });
+    return selectedEnum;
+  };
 
   return (
     <Modal>
@@ -61,7 +84,10 @@ const PokemonGenerations = () => {
           <PokemonIcon src={importPokemonImage("squirtle")} alt="Squirtle" />
         </div>
       </Modal.Button>
-      <Modal.Content title="Pokémon Generations">
+      <Modal.Content
+        title="Pokémon Generations"
+        handleSaveModal={changeGenerationHandler}
+      >
         <div className="mx-auto py-3 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-x-5 gap-y-6">
           {generations.map((images, index) => (
             <PokemonGenerationCard
@@ -69,13 +95,17 @@ const PokemonGenerations = () => {
               images={images}
               generation={index + 1}
               isSelected={
-                selectedGeneration === index && selectedGeneration !== null
+                selectedGeneration === indexToPokemonGenerations(index) &&
+                selectedGeneration !== null
               }
-              handleClick={() =>
-                setSelectedGeneration((previousIndex) =>
-                  previousIndex === index ? null : index
-                )
-              }
+              handleClick={() => {
+                setSelectedGeneration((previousGeneration) => {
+                  const pickedGeneration = indexToPokemonGenerations(index);
+                  return previousGeneration === pickedGeneration
+                    ? null
+                    : pickedGeneration;
+                });
+              }}
             />
           ))}
         </div>

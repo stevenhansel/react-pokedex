@@ -74,7 +74,6 @@ const pokemonsSlice = createSlice({
       if (state.data.length === 0) {
         state.data = nullValues;
       } else {
-        console.log("b");
         state.data = state.data.concat(nullValues);
       }
     },

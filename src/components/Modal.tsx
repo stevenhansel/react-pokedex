@@ -26,8 +26,9 @@ const Button = ({ children, className }: ButtonProps) => {
 type ContentProps = {
   title?: string;
   children?: React.ReactNode;
+  handleSaveModal?: () => void;
 };
-const Content = ({ children, title }: ContentProps) => {
+const Content = ({ children, title, handleSaveModal }: ContentProps) => {
   const { showModal, setShowModal } = useContext(ModalContext);
   return showModal ? (
     <>
@@ -58,9 +59,15 @@ const Content = ({ children, title }: ContentProps) => {
                 className="bg-green-500 text-white active:bg-green-600 font-bold uppercase text-sm px-6 py-3 rounded shadow hover:shadow-lg outline-none focus:outline-none mr-1 mb-1"
                 type="button"
                 style={{ transition: "all .15s ease" }}
-                onClick={() => setShowModal(false)}
+                onClick={() => {
+                  if (handleSaveModal) {
+                    handleSaveModal();
+                  }
+
+                  setShowModal(false);
+                }}
               >
-                Save Changes
+                Change
               </button>
             </div>
           </div>

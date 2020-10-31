@@ -27,7 +27,7 @@ const PokemonGenerationCard = ({
     >
       <div className="flex justify-center items-center">
         {images.map((image) => (
-          <img className="w-16 h-16" src={image} alt="Pokemon" />
+          <img key={image} className="w-16 h-16" src={image} alt="Pokemon" />
         ))}
       </div>
       <p className="text-md mt-4">Generation {romanize(generation)}</p>
