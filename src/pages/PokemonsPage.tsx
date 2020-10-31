@@ -1,28 +1,18 @@
-import React, { useEffect } from "react";
+import React from "react";
 import PokemonForm from "../components/PokemonForm";
 
 import Layout from "../components/Layout";
 import InfiniteScroll from "../components/InfiniteScroll";
 import PokemonCard from "../components/PokemonCard";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { pokemonsSelector, getPokemons } from "../features/pokemonSlice";
 import { SliceStatus } from "../globals";
-import {
-  cachedPokemonsSelector,
-  getCachedPokemons,
-} from "../features/cachedPokemonsSlice";
+import { cachedPokemonsSelector } from "../features/cachedPokemonsSlice";
 import PokemonSkeleton from "../components/PokemonSkeleton";
 
 const PokemonsPage = () => {
   const pokemons = useSelector(pokemonsSelector);
   const cachedPokemons = useSelector(cachedPokemonsSelector);
-
-  const dispatch = useDispatch();
-
-  useEffect(() => {
-    dispatch(getCachedPokemons());
-    // eslint-disable-next-line
-  }, []);
 
   return (
     <Layout title="Home">
