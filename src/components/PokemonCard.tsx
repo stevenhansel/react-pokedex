@@ -58,15 +58,13 @@ const PokemonCard = React.memo(
     }));
 
     return (
-      <Trail
-        open={true}
-        className="w-full rounded-lg overflow-hidden shadow-lg mx-auto cursor-pointer hover:shadow-2xl transition-all duration-75 ease-in-out"
-      >
+      <Trail open={true}>
         <animated.div
           onMouseMove={({ clientX: x, clientY: y }) =>
             set({ xys: calc(x, y, position, numCols) })
           }
           onMouseLeave={() => set({ xys: [0, 0, 1] })}
+          className="w-full rounded-lg overflow-hidden shadow-lg mx-auto cursor-pointer hover:shadow-2xl transition-all duration-75 ease-in-out"
           style={{
             // @ts-ignore
             transform: props.xys.interpolate(trans),
