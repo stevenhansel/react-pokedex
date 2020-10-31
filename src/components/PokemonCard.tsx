@@ -1,9 +1,10 @@
 import React from "react";
 import { Pokemon } from "../features/pokemonSlice";
-import { PokemonTypeColors } from "../globals";
+import { PokemonTypeColors, PokemonTypePlaceholders } from "../globals";
 import { leftPad } from "../utils/leftPad";
 import { useSpring, animated } from "react-spring";
 import Trail from "./Trail";
+import ProgressiveImage from "react-progressive-image-loading";
 
 type Props = Pokemon & {
   position: number;
@@ -11,7 +12,7 @@ type Props = Pokemon & {
 };
 
 const calc = (x: number, y: number, position: number, numCols: number) => {
-  const WINDOW_DIVIDER = 50;
+  const WINDOW_DIVIDER = 60;
   const Y_DIVIDER = 0.5;
   let positionDivider: number = 0.5;
 
@@ -51,6 +52,13 @@ const PokemonCard = React.memo(
       );
 
       return backgroundColor;
+    });
+    const imagePlaceholder = types.map(({ type }) => {
+      const [[, image]] = Object.entries(PokemonTypePlaceholders).filter(
+        ([key, _]) => key === type.name
+      );
+
+      return image;
     });
     const [props, set] = useSpring(() => ({
       xys: [0, 0, 1],
@@ -99,7 +107,13 @@ const PokemonCard = React.memo(
                   left: 16,
                 }}
               />
-              <img src={sprites.frontDefault} alt={name} loading="lazy" />
+              <ProgressiveImage
+                preview={imagePlaceholder[0]}
+                src={sprites.frontDefault}
+                render={(src, style) => (
+                  <img src={src} style={style} alt={name} />
+                )}
+              />
             </div>
           </div>
 

@@ -13,6 +13,7 @@
     "react-dom": "^16.14.0",
     "react-helmet-async": "^1.0.7",
     "react-icons": "^3.11.0",
+    "react-progressive-image-loading": "^3.0.3",
     "react-redux": "^7.2.1",
     "react-responsive": "^8.1.0",
     "react-router-dom": "^5.2.0",

@@ -11,8 +11,9 @@ import {
   cachedPokemonsSelector,
   getCachedPokemons,
 } from "../features/cachedPokemonsSlice";
+import PokemonSkeleton from "../components/PokemonSkeleton";
 
-const HomePage = () => {
+const PokemonsPage = () => {
   const pokemons = useSelector(pokemonsSelector);
   const cachedPokemons = useSelector(cachedPokemonsSelector);
 
@@ -51,7 +52,9 @@ const HomePage = () => {
                 <>
                   {pokemons.data.map((pokemon, index) =>
                     pokemon === null ? (
-                      <div key={`loading-${index}`}>Loading</div>
+                      <div key={`loading-${index}`}>
+                        <PokemonSkeleton />
+                      </div>
                     ) : (
                       <PokemonCard
                         key={pokemon.id}
@@ -70,4 +73,4 @@ const HomePage = () => {
     </Layout>
   );
 };
-export default HomePage;
+export default PokemonsPage;

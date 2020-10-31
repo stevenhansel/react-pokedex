@@ -1,3 +1,22 @@
+import TogepiImage from "./assets/pokemons/togepi.png";
+import CharizardImage from "./assets/pokemons/charizard.png";
+import BlastoiseImage from "./assets/pokemons/blastoise.png";
+import VenusaurImage from "./assets/pokemons/venusaur.png";
+import AerodactylImage from "./assets/pokemons/aerodactyl.png";
+import LucarioImage from "./assets/pokemons/lucario.png";
+import SeviperImage from "./assets/pokemons/seviper.png";
+import PikachuImage from "./assets/pokemons/pikachu.png";
+import DiglettImage from "./assets/pokemons/diglett.png";
+import MewImage from "./assets/pokemons/mew.png";
+import RegiceImage from "./assets/pokemons/regice.png";
+import ButterfreeImage from "./assets/pokemons/butterfree.png";
+import DragoniteImage from "./assets/pokemons/dragonite.png";
+import OnixImage from "./assets/pokemons/onix.png";
+import GangerImage from "./assets/pokemons/ganger.png";
+import WeavileImage from "./assets/pokemons/weavile.png";
+import KlinklangImage from "./assets/pokemons/klinklang.png";
+import ClefableImage from "./assets/pokemons/clefable.png";
+
 export enum SliceStatus {
   IDLE = "IDLE",
   LOADING = "LOADING",
@@ -86,4 +105,25 @@ export const PokemonTypeColors = {
     light: "#EFA7B7",
     medium: "#EE99AC",
   },
+};
+
+export const PokemonTypePlaceholders = {
+  normal: TogepiImage,
+  fire: CharizardImage,
+  fighting: LucarioImage,
+  water: BlastoiseImage,
+  flying: AerodactylImage,
+  grass: VenusaurImage,
+  poison: SeviperImage,
+  electric: PikachuImage,
+  ground: DiglettImage,
+  psychic: MewImage,
+  rock: OnixImage,
+  ice: RegiceImage,
+  bug: ButterfreeImage,
+  dragon: DragoniteImage,
+  ghost: GangerImage,
+  dark: WeavileImage,
+  steel: KlinklangImage,
+  fairy: ClefableImage,
 };
