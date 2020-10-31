@@ -8,8 +8,7 @@ import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
 import { leftPad } from "../utils/leftPad";
 import { baseImageUrl } from "../api/axios";
 
-const INITIAL_SIZE = 6;
-const PAGINATE_SIZE = 3;
+export const PAGINATE_SIZE = 6;
 
 export type Pokemon = {
   id: number;
@@ -51,7 +50,7 @@ export type Pokemon = {
 };
 
 type SliceState = {
-  data: Pokemon[];
+  data: (Pokemon | null)[];
   status: {
     state: SliceStatus;
   };
@@ -69,19 +68,31 @@ const pokemonsSlice = createSlice({
   initialState,
   reducers: {
     ...statusHandlerReducer,
-    getPokemonsReducer(state, action: PayloadAction<{ pokemons: Pokemon[] }>) {
-      const { pokemons } = action.payload;
-
-      const existingPokemonIds = state.data.map((p) => p.id);
-      const mergedPokemons = pokemons.filter(
-        (pokemon) => !existingPokemonIds.includes(pokemon.id)
-      );
-
-      state.data = state.data.concat(mergedPokemons);
+    initializePokemonsReducer(state, action: PayloadAction<{ size: number }>) {
+      const { size } = action.payload;
+      const nullValues = new Array<null>(size).fill(null);
+      if (state.data.length === 0) {
+        state.data = nullValues;
+      } else {
+        state.data = state.data.concat(nullValues);
+      }
     },
-    getPokemonByNameReducer(state, action) {
-      const payload = action.payload;
-      state.data.push(payload);
+    getPokemonsReducer(
+      state,
+      action: PayloadAction<{ pokemon: Pokemon; index: number; size: number }>
+    ) {
+      const { pokemon, size, index } = action.payload;
+
+      const isPokemonAlreadyExists = state.data.find(
+        (existingPokemon) =>
+          existingPokemon !== null && existingPokemon.id === pokemon.id
+      );
+      if (!isPokemonAlreadyExists) {
+        state.data[state.data.length - (size - index)] = pokemon;
+      }
+    },
+    resetPokemonsReducer(state, action) {
+      state.data = [];
     },
   },
 });
@@ -91,8 +102,9 @@ export const {
   initialize,
   error,
   success,
+  initializePokemonsReducer,
   getPokemonsReducer,
-  getPokemonByNameReducer,
+  resetPokemonsReducer,
 } = pokemonsSlice.actions;
 
 export const pokemonsSelector = (state: RootState) => state.pokemons;
@@ -101,31 +113,27 @@ const statusHandler = { initialize, error, success };
 
 export const getPokemons = wrapReduxAsyncHandler(
   statusHandler,
-  async (dispatch, { page }) => {
-    const { results } = await fromApi.getPokemons(
-      INITIAL_SIZE,
-      page * PAGINATE_SIZE
-    );
+  async (dispatch, { page, cachedPokemons }) => {
+    const results = cachedPokemons.slice(page, page + PAGINATE_SIZE);
+    dispatch(initializePokemonsReducer({ size: PAGINATE_SIZE }));
 
-    const pokemons: Pokemon[] = [];
-    for await (const { url } of results) {
+    for await (const [index, { url }] of results.entries()) {
       const pokemonId = Number(url.split("/").slice(-2)[0]);
       const pokemon = await fromApi.getPokemonById(pokemonId);
       const pokemonImageUrl = baseImageUrl + leftPad(pokemon.id, 3) + ".png";
 
-      pokemons.push({
-        ...camelcaseObject(pokemon),
-        sprites: {
-          frontDefault: pokemonImageUrl,
-        },
-      });
+      dispatch(
+        getPokemonsReducer({
+          pokemon: {
+            ...camelcaseObject(pokemon),
+            sprites: {
+              frontDefault: pokemonImageUrl,
+            },
+          },
+          size: PAGINATE_SIZE,
+          index,
+        })
+      );
     }
-
-    dispatch(getPokemonsReducer({ pokemons }));
   }
-);
-
-export const getPokemonByName = wrapReduxAsyncHandler(
-  statusHandler,
-  async (dispatch, { name }) => {}
 );

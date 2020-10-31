@@ -1,11 +1,11 @@
 import React from "react";
-import { ReactComponent as PokeballIcon } from "../assets/pokeball.svg";
+import { ReactComponent as PokeballIcon } from "../svg/pokeball.svg";
 
 type Props = {
   clickHandler: () => void;
 };
 
-const LoadButton: React.FC<Props> = ({ clickHandler }) => {
+const LoadButton = ({ clickHandler }: Props) => {
   return (
     <button
       onClick={clickHandler}
