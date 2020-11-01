@@ -1,24 +1,35 @@
-import React from "react";
-import { Helmet, HelmetProvider } from "react-helmet-async";
-import { Provider } from "react-redux";
-import store from "./features/store";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { BrowserRouter } from "react-router-dom";
+import SplashScreen from "./components/SplashScreen";
+import {
+  cachedPokemonsSelector,
+  getCachedPokemons,
+} from "./features/cachedPokemonsSlice";
+
+import { SliceStatus } from "./globals";
 import Routes from "./Routes";
 
 const App: React.FC = () => {
+  const dispatch = useDispatch();
+  const cachedPokemons = useSelector(cachedPokemonsSelector);
+
+  useEffect(() => {
+    dispatch(getCachedPokemons());
+    //eslint-disable-next-line
+  }, []);
+
   return (
-    <HelmetProvider>
-      <Helmet>
-        <meta charSet="utf-8" />
-        <title>React Pokédex</title>
-        <meta
-          name="description"
-          content="a simple pokédex for your pokemon needs."
-        />
-      </Helmet>
-      <Provider store={store}>
-        <Routes />
-      </Provider>
-    </HelmetProvider>
+    <>
+      {cachedPokemons.status.state === SliceStatus.LOADING ||
+      cachedPokemons.status.state === SliceStatus.IDLE ? (
+        <SplashScreen />
+      ) : (
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      )}
+    </>
   );
 };
 

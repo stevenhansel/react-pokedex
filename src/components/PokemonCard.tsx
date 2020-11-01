@@ -5,6 +5,7 @@ import { leftPad } from "../utils/leftPad";
 import { useSpring, animated } from "react-spring";
 import Trail from "./Trail";
 import ProgressiveImage from "react-progressive-image-loading";
+import { useHistory } from "react-router-dom";
 
 type Props = Pokemon & {
   position: number;
@@ -46,6 +47,7 @@ const trans = (x: number, y: number, z: number) => {
 
 const PokemonCard = React.memo(
   ({ id, name, sprites, types, position, numCols }: Props) => {
+    const history = useHistory();
     const backgroundColors = types.map(({ type }) => {
       const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
         ([key, _]) => key === type.name
@@ -78,6 +80,7 @@ const PokemonCard = React.memo(
             transform: props.xys.interpolate(trans),
             backgroundColor: backgroundColors[0].medium,
           }}
+          onClick={() => history.push(`/pokemons/${id}`)}
         >
           <div
             className="py-32 mx-auto w-full flex items-center justify-center relative"
