@@ -27,13 +27,12 @@ const PokemonsPage = () => {
           }
           isLoading={pokemons.status.state === SliceStatus.LOADING}
         >
-          {({ mutatePage, trigger }) => (
+          {({ mutatePage }) => (
             <>
               <div className="my-4 md:my-6 lg:my-8 w-full">
                 <PokemonForm
                   placeholder="Search for a pokémon..."
                   mutatePage={mutatePage}
-                  trigger={trigger}
                 />
               </div>
               <div className="mx-auto w-full text-center">
@@ -41,28 +40,30 @@ const PokemonsPage = () => {
                   cachedPokemons.status.state === SliceStatus.LOADING ||
                   cachedPokemons.status.state === SliceStatus.IDLE
                 ) && (
-                  <InfiniteScroll.Container>
-                    {({ numCols }) => (
-                      <>
-                        {pokemons.data.map((pokemon, index) =>
-                          pokemon === null ? (
-                            <div key={`loading-${index}`}>
-                              <PokemonSkeleton />
-                            </div>
-                          ) : (
-                            <PokemonCard
-                              key={pokemon.id}
-                              {...pokemon}
-                              position={index % numCols}
-                              numCols={numCols}
-                            />
-                          )
-                        )}
-                      </>
-                    )}
-                  </InfiniteScroll.Container>
+                  <>
+                    <InfiniteScroll.Container>
+                      {({ numCols }) => (
+                        <>
+                          {pokemons.data.map((pokemon, index) =>
+                            pokemon === null ? (
+                              <div key={`loading-${index}`}>
+                                <PokemonSkeleton />
+                              </div>
+                            ) : (
+                              <PokemonCard
+                                key={pokemon.id}
+                                {...pokemon}
+                                position={index % numCols}
+                                numCols={numCols}
+                              />
+                            )
+                          )}
+                        </>
+                      )}
+                    </InfiniteScroll.Container>
+                    <InfiniteScroll.Waypoint />
+                  </>
                 )}
-                <InfiniteScroll.Button />
               </div>
             </>
           )}
