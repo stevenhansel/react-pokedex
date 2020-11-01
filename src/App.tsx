@@ -15,20 +15,20 @@ const App: React.FC = () => {
   const cachedPokemons = useSelector(cachedPokemonsSelector);
 
   useEffect(() => {
-    // dispatch(getCachedPokemons());
+    dispatch(getCachedPokemons());
     //eslint-disable-next-line
   }, []);
 
   return (
     <>
-      {/* {cachedPokemons.status.state === SliceStatus.LOADING ||
+      {cachedPokemons.status.state === SliceStatus.LOADING ||
       cachedPokemons.status.state === SliceStatus.IDLE ? (
         <SplashScreen />
-      ) : ( */}
-      <BrowserRouter>
-        <Routes />
-      </BrowserRouter>
-      {/* )} */}
+      ) : (
+        <BrowserRouter>
+          <Routes />
+        </BrowserRouter>
+      )}
     </>
   );
 };

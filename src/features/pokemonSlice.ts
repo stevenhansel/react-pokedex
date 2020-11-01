@@ -91,6 +91,19 @@ const pokemonsSlice = createSlice({
         state.data[state.data.length - (size - index)] = pokemon;
       }
     },
+    getSinglePokemonReducer(
+      state,
+      action: PayloadAction<{ pokemon: Pokemon }>
+    ) {
+      const { pokemon } = action.payload;
+      const isPokemonAlreadyExists = state.data.find(
+        (existingPokemon) =>
+          existingPokemon !== null && existingPokemon.id === pokemon.id
+      );
+      if (!isPokemonAlreadyExists) {
+        state.data.push(pokemon);
+      }
+    },
     resetPokemonsReducer(state, action) {
       state.data = [];
     },
@@ -105,11 +118,16 @@ export const {
   initializePokemonsReducer,
   getPokemonsReducer,
   resetPokemonsReducer,
+  getSinglePokemonReducer,
 } = pokemonsSlice.actions;
 
 export const pokemonsSelector = (state: RootState) => state.pokemons;
 
 const statusHandler = { initialize, error, success };
+
+const transformSpriteToBaseImage = (pokemonId: number): string => {
+  return baseImageUrl + leftPad(pokemonId, 3) + ".png";
+};
 
 export const getPokemons = wrapReduxAsyncHandler(
   statusHandler,
@@ -120,7 +138,7 @@ export const getPokemons = wrapReduxAsyncHandler(
     for await (const [index, { url }] of results.entries()) {
       const pokemonId = Number(url.split("/").slice(-2)[0]);
       const pokemon = await fromApi.getPokemonById(pokemonId);
-      const pokemonImageUrl = baseImageUrl + leftPad(pokemon.id, 3) + ".png";
+      const pokemonImageUrl = transformSpriteToBaseImage(pokemon.id);
 
       dispatch(
         getPokemonsReducer({
@@ -135,5 +153,18 @@ export const getPokemons = wrapReduxAsyncHandler(
         })
       );
     }
+  }
+);
+
+export const getPokemonById = wrapReduxAsyncHandler(
+  statusHandler,
+  async (dispatch, { pokemonId }) => {
+    const pokemon = await fromApi.getPokemonById(pokemonId);
+    const pokemonImageUrl = transformSpriteToBaseImage(pokemon.id);
+    const transformedPokemon = {
+      ...pokemon,
+      sprites: { frontDefault: pokemonImageUrl },
+    };
+    dispatch(getSinglePokemonReducer({ pokemon: transformedPokemon }));
   }
 );
