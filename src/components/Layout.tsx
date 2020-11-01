@@ -9,7 +9,7 @@ type Props = {
 
 const Layout = ({ children, title }: Props) => {
   return (
-    <div>
+    <>
       <Helmet>
         <meta charSet="utf-8" />
         <title>React Pokédex {title && `| ${title}`}</title>
@@ -19,8 +19,10 @@ const Layout = ({ children, title }: Props) => {
         />
       </Helmet>
       <Navbar />
-      {children}
-    </div>
+      <div>
+        <div className="px-6 md:px-24 lg:px-64 pt-24">{children}</div>
+      </div>
+    </>
   );
 };
 export default Layout;

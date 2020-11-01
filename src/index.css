@@ -39,6 +39,13 @@
 
 @tailwind utilities;
 
+html {
+  margin: 0;
+  padding: 0;
+}
+
 body {
   background-color: #f2f1f0;
+  margin: 0;
+  padding: 0;
 }
