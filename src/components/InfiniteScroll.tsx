@@ -4,8 +4,8 @@ import { getPokemons, PAGINATE_SIZE } from "../features/pokemonSlice";
 import { PokemonGenerationsEnum } from "../features/cachedPokemonsSlice";
 import useTailwindMediaQuery from "../hooks/useTailwindMediaQuery";
 import LoadButton from "./LoadButton";
-import useTrigger from "../hooks/useTrigger";
 import { randomize } from "../utils/randomize";
+import { Waypoint as ReactWaypoint } from "react-waypoint";
 
 type ContextType = {
   page: number;
@@ -16,8 +16,6 @@ type ContextType = {
   paginationHandler: (
     page: number
   ) => (dispatch: React.Dispatch<any>) => Promise<void>;
-  listener: number;
-  trigger: () => void;
 };
 const InfiniteScrollContext = createContext<ContextType>({
   page: 0,
@@ -26,9 +24,26 @@ const InfiniteScrollContext = createContext<ContextType>({
   setNumCols: () => {},
   isLoading: true,
   paginationHandler: getPokemons,
-  listener: 0,
-  trigger: () => {},
 });
+
+const Waypoint = () => {
+  const { isLoading, setPage, page, paginationHandler } = useContext(
+    InfiniteScrollContext
+  );
+  const dispatch = useDispatch();
+  return (
+    <div className="mt-48">
+      <ReactWaypoint
+        onEnter={() => {
+          if (!isLoading) {
+            setPage(page + PAGINATE_SIZE);
+            dispatch(paginationHandler(page));
+          }
+        }}
+      />
+    </div>
+  );
+};
 
 const Button = () => {
   const { isLoading, setPage, page } = useContext(InfiniteScrollContext);
@@ -51,16 +66,7 @@ type ContainerProps = {
   children: ({ numCols }: { numCols: number }) => React.ReactNode;
 };
 const Container = ({ children }: ContainerProps) => {
-  const dispatch = useDispatch();
-
-  const { numCols, paginationHandler, page, listener } = useContext(
-    InfiniteScrollContext
-  );
-
-  useEffect(() => {
-    dispatch(paginationHandler(page));
-    //eslint-disable-next-line
-  }, [listener, page]);
+  const { numCols } = useContext(InfiniteScrollContext);
 
   return (
     <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-5 gap-y-6">
@@ -72,10 +78,8 @@ const Container = ({ children }: ContainerProps) => {
 type InfiniteScrollProps = {
   children: ({
     mutatePage: resetPage,
-    trigger,
   }: {
     mutatePage: React.Dispatch<React.SetStateAction<number>>;
-    trigger: () => void;
   }) => React.ReactNode;
   paginationHandler: (
     page: number
@@ -89,7 +93,6 @@ const InfiniteScroll = ({
   isLoading,
 }: InfiniteScrollProps) => {
   const { isSmall, isLarge } = useTailwindMediaQuery();
-  const { listener, trigger } = useTrigger();
   const [page, setPage] = useState(
     randomize(0, Number(PokemonGenerationsEnum.GENERATION_7) - PAGINATE_SIZE)
   );
@@ -119,15 +122,14 @@ const InfiniteScroll = ({
         setNumCols,
         isLoading,
         paginationHandler,
-        listener,
-        trigger,
       }}
     >
-      {children({ mutatePage: setPage, trigger })}
+      {children({ mutatePage: setPage })}
     </InfiniteScrollContext.Provider>
   );
 };
 
 InfiniteScroll.Container = Container;
 InfiniteScroll.Button = Button;
+InfiniteScroll.Waypoint = Waypoint;
 export default InfiniteScroll;

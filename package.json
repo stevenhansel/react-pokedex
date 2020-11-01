@@ -22,6 +22,7 @@
     "react-scripts": "3.4.3",
     "react-spinners": "^0.9.0",
     "react-spring": "^8.0.27",
+    "react-waypoint": "^9.0.3",
     "typescript": "~3.7.2"
   },
   "scripts": {
