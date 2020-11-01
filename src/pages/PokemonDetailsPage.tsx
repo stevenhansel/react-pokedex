@@ -1,11 +1,17 @@
-import React from "react";
-import ProgressiveImage from "react-progressive-image-loading";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
 import Layout from "../components/Layout";
-import { importPokemonImage } from "../globals";
+import PokemonDetailsBiography from "../components/PokemonDetailsBiography";
+import PokemonDetailsEvolutions from "../components/PokemonDetailsEvolutions";
+import PokemonDetailsHeader from "../components/PokemonDetailsHeader";
+import PokemonDetailsStats from "../components/PokemonDetailsStats";
+import Tab from "../components/Tab";
+
+type PokemonTabs = "biography" | "stats" | "evolutions";
 
 const PokemonDetailsPage = () => {
   const history = useHistory();
+  const [activeTab, setActiveTab] = useState<PokemonTabs>("biography");
 
   return (
     <Layout title="Pokemon Details">
@@ -16,62 +22,39 @@ const PokemonDetailsPage = () => {
         <span className="text-primary font-semibold">Go Back</span>
       </button>
       <div
-        className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto my-8 rounded-lg"
+        className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto my-8 rounded-lg shadow-lg"
         style={{
           backgroundColor: "#6890F0",
         }}
       >
-        <div className="w-full">
-          <div className="px-4 md:px-8 lg:px-12">
-            <p className="text-md mt-4 text-white font-medium">#001</p>
-            <h1 className="text-2xl md:text-3xl lg:text-4xl text-white font-bold pb-6">
-              Blastoise
-            </h1>
+        <PokemonDetailsHeader />
+
+        <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden lg:overflow-y-scroll w-full pt-20 lg:pt-8 px-4 md:px-8 lg:px-12">
+          <div className="flex flex-row justify-evenly w-full">
+            <Tab
+              handleSelect={() => setActiveTab("biography")}
+              isSelected={activeTab === "biography"}
+            >
+              Biography
+            </Tab>
+            <Tab
+              handleSelect={() => setActiveTab("stats")}
+              isSelected={activeTab === "stats"}
+            >
+              Stats
+            </Tab>
+            <Tab
+              handleSelect={() => setActiveTab("evolutions")}
+              isSelected={activeTab === "evolutions"}
+            >
+              Evolutions
+            </Tab>
           </div>
-
-          <div
-            className="relative text-center mx-auto w-full"
-            style={{ height: 325 }}
-          >
-            <h1 className="absolute -mt-2 text-6xl z-0 w-full text-white opacity-50 font-extrabold overflow-hidden">
-              カメックス
-            </h1>
-
-            <div
-              className="rounded-full absolute inset-x-auto mx-auto z-0 inline-block left-0 right-0"
-              style={{
-                width: 150,
-                height: 150,
-                backgroundColor: "#85A5F0",
-                bottom: 70,
-              }}
-            />
-            <ProgressiveImage
-              preview={importPokemonImage("blastoise")}
-              src={importPokemonImage("blastoise")}
-              render={(src, style) => (
-                <img
-                  src={src}
-                  alt={"charizard"}
-                  style={{
-                    ...style,
-                    width: 325,
-                    height: 325,
-                    position: "absolute",
-                    display: "block",
-                    left: 0,
-                    right: 0,
-                    margin: "auto",
-                  }}
-                />
-              )}
-            />
+          <div className="lg:h-120">
+            {activeTab === "biography" && <PokemonDetailsBiography />}
+            {activeTab === "stats" && <PokemonDetailsStats />}
+            {activeTab === "evolutions" && <PokemonDetailsEvolutions />}
           </div>
-        </div>
-        <div className="-mt-12" />
-
-        <div className="bg-white lg:mt-0 shadow-lg rounded-lg overflow-hidden w-full h-full">
-          <h1>Content</h1>
         </div>
       </div>
     </Layout>
