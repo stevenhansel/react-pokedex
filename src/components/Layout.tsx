@@ -9,7 +9,7 @@ type Props = {
 
 const Layout = ({ children, title }: Props) => {
   return (
-    <div>
+    <div data-testid="layout">
       <Helmet>
         <meta charSet="utf-8" />
         <title>React Pokédex {title && `| ${title}`}</title>
