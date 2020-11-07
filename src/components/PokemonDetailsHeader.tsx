@@ -5,6 +5,22 @@ import { Species } from "../features/speciesSlice";
 import { PokemonTypePlaceholders } from "../globals";
 import { leftPad } from "../utils/leftPad";
 
+const MaskStyling = {
+  width: 225,
+  height: 225,
+  bottom: 60,
+};
+
+const PokemonImageStyling = {
+  width: 325,
+  height: 325,
+  display: "block",
+  left: 0,
+  right: 0,
+  bottom: 5,
+  margin: "auto",
+};
+
 type Props = {
   pokemon: Pokemon;
   species: Species;
@@ -39,10 +55,7 @@ const PokemonDetailsHeader = ({
           </h1>
         </div>
 
-        <div
-          className="relative text-center mx-auto w-full"
-          style={{ height: 400 }}
-        >
+        <div className="relative text-center mx-auto w-full h-96">
           <h1 className="absolute -mt-2 text-6xl z-0 w-full text-white opacity-50 font-extrabold overflow-hidden">
             {kanjiName && kanjiName.name}
           </h1>
@@ -50,10 +63,8 @@ const PokemonDetailsHeader = ({
           <div
             className="rounded-full absolute inset-x-auto mx-auto z-0 inline-block left-0 right-0"
             style={{
-              width: 225,
-              height: 225,
+              ...MaskStyling,
               backgroundColor: selectedBackgroundColor.light,
-              bottom: 60,
             }}
           />
           <ProgressiveImage
@@ -65,13 +76,8 @@ const PokemonDetailsHeader = ({
                 alt={pokemon.name}
                 style={{
                   ...style,
-                  width: 325,
-                  height: 325,
+                  ...PokemonImageStyling,
                   position: "absolute",
-                  display: "block",
-                  left: 0,
-                  right: 0,
-                  margin: "auto",
                 }}
               />
             )}

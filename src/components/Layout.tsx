@@ -19,7 +19,7 @@ const Layout = ({ children, title }: Props) => {
         />
       </Helmet>
       <Navbar />
-      <div className="px-6 md:px-24 lg:px-64 pt-24">{children}</div>
+      <div className="px-2 md:px-24 lg:px-64 pt-24">{children}</div>
     </>
   );
 };

@@ -7,6 +7,18 @@ import Trail from "./Trail";
 import ProgressiveImage from "react-progressive-image-loading";
 import { useHistory } from "react-router-dom";
 
+const MaskStyling = {
+  width: 130,
+  height: 130,
+  zIndex: -10,
+  bottom: 8,
+  left: 16,
+};
+const ImageContainerStyling = {
+  width: 175,
+  height: 175,
+};
+
 type Props = Pokemon & {
   position: number;
   numCols: number;
@@ -94,20 +106,13 @@ const PokemonCard = React.memo(
 
             <div
               className="inset-x-auto bottom-0 absolute z-20"
-              style={{
-                width: 175,
-                height: 175,
-              }}
+              style={ImageContainerStyling}
             >
               <div
                 className="rounded-full absolute z-0 inset-x-auto mx-auto"
                 style={{
-                  width: 130,
-                  height: 130,
+                  ...MaskStyling,
                   backgroundColor: backgroundColors[0].light,
-                  zIndex: -10,
-                  bottom: 8,
-                  left: 16,
                 }}
               />
               <ProgressiveImage

@@ -68,7 +68,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                   <span className="text-primary font-semibold">Go Back</span>
                 </button>
                 <div
-                  className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto my-8 rounded-lg shadow-lg"
+                  className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto mt-4 rounded-lg shadow-lg"
                   style={{
                     backgroundColor:
                       selectedBackgroundColor && selectedBackgroundColor.medium,
@@ -80,7 +80,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                     selectedBackgroundColor={selectedBackgroundColor}
                   />
 
-                  <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden lg:overflow-y-scroll w-full pt-20 lg:pt-8 px-4 md:px-8 lg:px-12">
+                  <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden lg:overflow-y-scroll w-full pt-16 lg:pt-8 px-4 md:px-8 lg:px-12">
                     <div className="flex flex-row justify-evenly w-full">
                       <Tab
                         handleSelect={() => setActiveTab("biography")}
@@ -109,7 +109,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                       )}
                     </div>
                   </div>
-                </div>{" "}
+                </div>
               </>
             )}
           </>

@@ -3,11 +3,8 @@ import React from "react";
 import { Switch, Route, useLocation } from "react-router-dom";
 import { useTransition, animated } from "react-spring";
 import SplashScreen from "./components/SplashScreen";
-
+import PokemonDetailsPage from "./pages/PokemonDetailsPage";
 const PokemonsPage = React.lazy(() => import("./pages/PokemonsPage"));
-const PokemonDetailsPage = React.lazy(
-  () => import("./pages/PokemonDetailsPage")
-);
 
 const Routes: React.FC = () => {
   const location = useLocation();
@@ -37,12 +34,10 @@ const Routes: React.FC = () => {
             position: "absolute",
           }}
         >
-          <div>
-            <Switch location={location}>
-              <Route path="/pokemons/:id" component={PokemonDetailsPage} />
-              <Route exact path="/" component={PokemonsPage} />
-            </Switch>
-          </div>
+          <Switch location={location}>
+            <Route path="/pokemons/:id" component={PokemonDetailsPage} />
+            <Route exact path="/" component={PokemonsPage} />
+          </Switch>
         </animated.div>
       ))}
     </React.Suspense>
