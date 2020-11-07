@@ -1,38 +1,46 @@
-import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
 
-import { Switch, Route, BrowserRouter } from "react-router-dom";
+import { Switch, Route, useLocation } from "react-router-dom";
+import { useTransition, animated } from "react-spring";
 import SplashScreen from "./components/SplashScreen";
-import {
-  cachedPokemonsSelector,
-  getCachedPokemons,
-} from "./features/cachedPokemonsSlice";
-import { SliceStatus } from "./globals";
-
+import PokemonDetailsPage from "./pages/PokemonDetailsPage";
 const PokemonsPage = React.lazy(() => import("./pages/PokemonsPage"));
 
 const Routes: React.FC = () => {
-  const dispatch = useDispatch();
-  const cachedPokemons = useSelector(cachedPokemonsSelector);
-
-  useEffect(() => {
-    dispatch(getCachedPokemons());
-    //eslint-disable-next-line
-  }, []);
+  const location = useLocation();
+  const transitions = useTransition(location, (location) => location.pathname, {
+    config: {
+      duration: 250,
+    },
+    from: {
+      opacity: 0.25,
+    },
+    enter: {
+      opacity: 1,
+    },
+    leave: {
+      opacity: 0.25,
+    },
+  });
 
   return (
-    <BrowserRouter>
-      <React.Suspense fallback={<SplashScreen />}>
-        <Switch>
-          {cachedPokemons.status.state === SliceStatus.LOADING ||
-          cachedPokemons.status.state === SliceStatus.IDLE ? (
-            <SplashScreen />
-          ) : (
-            <Route path="/" component={PokemonsPage} />
-          )}
-        </Switch>
-      </React.Suspense>
-    </BrowserRouter>
+    <React.Suspense fallback={<SplashScreen />}>
+      {transitions.map(({ item: location, props, key }) => (
+        <animated.div
+          key={key}
+          style={{
+            ...props,
+            width: "100%",
+            position: "absolute",
+          }}
+        >
+          <Switch location={location}>
+            <Route path="/pokemons/:id" component={PokemonDetailsPage} />
+            <Route exact path="/" component={PokemonsPage} />
+          </Switch>
+        </animated.div>
+      ))}
+    </React.Suspense>
   );
 };
 export default Routes;

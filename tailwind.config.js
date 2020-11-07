@@ -1,6 +1,20 @@
 module.exports = {
   purge: ["./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
+    minHeight: {
+      0: "0",
+      "1/4": "25%",
+      "1/2": "50%",
+      "3/4": "75%",
+      full: "100%",
+      72: "18rem",
+      84: "21rem",
+      96: "24rem",
+      108: "27rem",
+      120: "30rem",
+      132: "33rem",
+      154: "36rem",
+    },
     extend: {
       fontFamily: {
         sans: ["Montserrat", "sans-serif"],
@@ -22,6 +36,12 @@ module.exports = {
         72: "18rem",
         84: "21rem",
         96: "24rem",
+        108: "27rem",
+        120: "30rem",
+        132: "33rem",
+        154: "36rem",
+        166: "39rem",
+        178: "42rem",
       },
       colors: {
         primary: "#E3350D",
@@ -29,9 +49,8 @@ module.exports = {
         primaryGray: "#DEDEDE",
         secondaryGray: "#ACAAAA",
         tertiaryGray: "#8A8A8A",
-        primaryYellow: "",
-        primaryBlue: "",
-        primaryGreen: "",
+        darkGray: "#8C8C8C",
+        darkerGray: "#6D6D6D",
       },
     },
   },

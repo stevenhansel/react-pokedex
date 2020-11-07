@@ -15,7 +15,13 @@ class ApiCallCreator {
   }
 
   getPokemonByName(name: string) {
-    return createApiRequest(`/pokemon/${name}`, HTTP_METHODS.GET, {});
+    return createApiRequest(`/pokemon/${name}/`, HTTP_METHODS.GET, {});
+  }
+  getSpeciesByName(name: string) {
+    return createApiRequest(`/pokemon-species/${name}/`, HTTP_METHODS.GET, {});
+  }
+  getSpeciesById(id: number) {
+    return createApiRequest(`/pokemon-species/${id}/`, HTTP_METHODS.GET, {});
   }
 }
 

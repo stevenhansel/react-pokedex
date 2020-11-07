@@ -12,12 +12,20 @@ const ModalContext = createContext<ModalContextType>({
 type ButtonProps = {
   children: React.ReactNode;
   className?: string;
+  disabled?: boolean;
 };
-const Button = ({ children, className }: ButtonProps) => {
+const Button = ({ children, className, disabled }: ButtonProps) => {
   const { setShowModal } = useContext(ModalContext);
 
   return (
-    <button onClick={() => setShowModal(true)} className={className}>
+    <button
+      onClick={() => {
+        if (!disabled) {
+          setShowModal(true);
+        }
+      }}
+      className={className}
+    >
       {children}
     </button>
   );

@@ -2,145 +2,104 @@ import React from "react";
 import { Pokemon } from "../features/pokemonSlice";
 import { PokemonTypeColors, PokemonTypePlaceholders } from "../globals";
 import { leftPad } from "../utils/leftPad";
-import { useSpring, animated } from "react-spring";
 import Trail from "./Trail";
 import ProgressiveImage from "react-progressive-image-loading";
+import { useHistory } from "react-router-dom";
 
-type Props = Pokemon & {
-  position: number;
-  numCols: number;
+const MaskStyling = {
+  width: 130,
+  height: 130,
+  zIndex: -10,
+  bottom: 8,
+  left: 16,
+};
+const ImageContainerStyling = {
+  width: 175,
+  height: 175,
 };
 
-const calc = (x: number, y: number, position: number, numCols: number) => {
-  const WINDOW_DIVIDER = 60;
-  const Y_DIVIDER = 0.5;
-  let positionDivider: number = 0.5;
+type Props = Pokemon;
 
-  switch (numCols) {
-    case 1:
-      positionDivider = 0.5;
-      break;
-    case 2:
-      if (position === 0) positionDivider = 0.3;
-      if (position === 1) positionDivider = 0.7;
-      break;
-    case 3:
-      if (position === 0) positionDivider = 0.25;
-      if (position === 1) positionDivider = 0.5;
-      if (position === 2) positionDivider = 0.75;
-      break;
-    default:
-      break;
-  }
+const PokemonCard = ({ id, name, sprites, types }: Props) => {
+  const history = useHistory();
 
-  return [
-    -(y - window.innerHeight * Y_DIVIDER) / WINDOW_DIVIDER,
-    (x - window.innerWidth * positionDivider) / WINDOW_DIVIDER,
-    1,
-  ];
-};
+  const backgroundColors = types.map(({ type }) => {
+    const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
+      ([key, _]) => key === type.name
+    );
 
-const trans = (x: number, y: number, z: number) => {
-  return `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${z})`;
-};
+    return backgroundColor;
+  });
+  const imagePlaceholder = types.map(({ type }) => {
+    const [[, image]] = Object.entries(PokemonTypePlaceholders).filter(
+      ([key, _]) => key === type.name
+    );
 
-const PokemonCard = React.memo(
-  ({ id, name, sprites, types, position, numCols }: Props) => {
-    const backgroundColors = types.map(({ type }) => {
-      const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
-        ([key, _]) => key === type.name
-      );
+    return image;
+  });
 
-      return backgroundColor;
-    });
-    const imagePlaceholder = types.map(({ type }) => {
-      const [[, image]] = Object.entries(PokemonTypePlaceholders).filter(
-        ([key, _]) => key === type.name
-      );
-
-      return image;
-    });
-    const [props, set] = useSpring(() => ({
-      xys: [0, 0, 1],
-      config: { mass: 8, tension: 350, friction: 40 },
-    }));
-
-    return (
-      <Trail open={true}>
-        <animated.div
-          onMouseMove={({ clientX: x, clientY: y }) =>
-            set({ xys: calc(x, y, position, numCols) })
-          }
-          onMouseLeave={() => set({ xys: [0, 0, 1] })}
-          className="w-full rounded-lg overflow-hidden shadow-lg mx-auto cursor-pointer hover:shadow-2xl transition-all duration-75 ease-in-out"
+  return (
+    <Trail open={true}>
+      <div
+        className="w-full rounded-lg overflow-hidden shadow-lg mx-auto cursor-pointer hover:shadow-2xl transition-all duration-200 ease-in-out transform hover:-translate-y-2"
+        style={{
+          backgroundColor: backgroundColors[0].medium,
+        }}
+        onClick={() => history.push(`/pokemons/${id}`)}
+      >
+        <div
+          className="py-32 mx-auto w-full flex items-center justify-center relative"
           style={{
-            // @ts-ignore
-            transform: props.xys.interpolate(trans),
             backgroundColor: backgroundColors[0].medium,
           }}
         >
+          <p className="text-6xl font-semibold text-black text-opacity-25 absolute tracking-xl top-1/8 pointer-events-none">
+            #{leftPad(id, 3)}
+          </p>
+
           <div
-            className="py-32 mx-auto w-full flex items-center justify-center relative"
-            style={{
-              backgroundColor: backgroundColors[0].medium,
-            }}
+            className="inset-x-auto bottom-0 absolute z-20"
+            style={ImageContainerStyling}
           >
-            <p className="text-6xl font-semibold text-black text-opacity-25 absolute tracking-xl top-1/8 pointer-events-none">
-              #{leftPad(id, 3)}
-            </p>
-
             <div
-              className="inset-x-auto bottom-0 absolute z-20"
+              className="rounded-full absolute z-0 inset-x-auto mx-auto"
               style={{
-                width: 175,
-                height: 175,
+                ...MaskStyling,
+                backgroundColor: backgroundColors[0].light,
               }}
-            >
-              <div
-                className="rounded-full absolute z-0 inset-x-auto mx-auto"
-                style={{
-                  width: 130,
-                  height: 130,
-                  backgroundColor: backgroundColors[0].light,
-                  zIndex: -10,
-                  bottom: 8,
-                  left: 16,
-                }}
-              />
-              <ProgressiveImage
-                preview={imagePlaceholder[0]}
-                src={sprites.frontDefault}
-                render={(src, style) => (
-                  <img src={src} style={style} alt={name} />
-                )}
-              />
-            </div>
+            />
+            <ProgressiveImage
+              preview={imagePlaceholder[0]}
+              src={sprites.frontDefault}
+              render={(src, style) => (
+                <img src={src} style={style} alt={name} />
+              )}
+            />
           </div>
+        </div>
 
-          <div className="bg-white w-full pt-5 pb-8 text-center">
-            <h1 className="capitalize font-semibold text-3xl mb-2">{name}</h1>
-            <div className="flex flex-wrap mx-auto justify-center">
-              {types.map(({ type }, index) => {
-                return (
-                  <p
-                    key={`${id}-${type.name}`}
-                    className={
-                      "font-bold uppercase text-sm" +
-                      (index !== types.length - 1 ? " mr-6" : "")
-                    }
-                    style={{ color: backgroundColors[index].medium }}
-                  >
-                    {type.name}
-                  </p>
-                );
-              })}
-            </div>
+        <div className="bg-white w-full pt-5 pb-8 text-center">
+          <h1 className="capitalize font-semibold text-3xl mb-2">{name}</h1>
+          <div className="flex flex-wrap mx-auto justify-center">
+            {types.map(({ type }, index) => {
+              return (
+                <p
+                  key={`${id}-${type.name}`}
+                  className={
+                    "font-bold uppercase text-sm" +
+                    (index !== types.length - 1 ? " mr-6" : "")
+                  }
+                  style={{ color: backgroundColors[index].medium }}
+                >
+                  {type.name}
+                </p>
+              );
+            })}
           </div>
-        </animated.div>
-      </Trail>
-    );
-  },
-  (previousProps, nextProps) => previousProps.id === nextProps.id
-);
+        </div>
+      </div>
+    </Trail>
+  );
+};
 
 export default PokemonCard;

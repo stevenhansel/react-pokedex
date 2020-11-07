@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 
 import Modal from "./Modal";
 import PokemonGenerationCard from "./PokemonGenerationCard";
@@ -60,23 +60,41 @@ const PokemonGenerations = ({
   changeGenerationHandler,
   isLoading,
 }: Props) => {
-  const indexToPokemonGenerations = (
-    realIndex: number
-  ): PokemonGenerationsEnum | null => {
-    const generations = Object.entries(PokemonGenerationsEnum);
-    let selectedEnum: PokemonGenerationsEnum | null = null;
+  const indexToPokemonGenerations = useCallback(
+    (realIndex: number): PokemonGenerationsEnum | null => {
+      const pokemonGenerations = Object.entries(PokemonGenerationsEnum);
+      let selectedEnum: PokemonGenerationsEnum | null = null;
 
-    generations.forEach(([_, b], index) => {
-      if (index === realIndex) {
-        selectedEnum = b;
-      }
-    });
-    return selectedEnum;
-  };
+      pokemonGenerations.forEach(([_, b], index) => {
+        if (index === realIndex) {
+          selectedEnum = b;
+        }
+      });
+      return selectedEnum;
+    },
+    []
+  );
+
+  const pokemonGenerationsToIndex = useCallback(
+    (selectedGeneration: PokemonGenerationsEnum): number => {
+      const pokemonGenerations = Object.entries(PokemonGenerationsEnum);
+      let selectedIndex: number = 0;
+
+      pokemonGenerations.forEach(([_, b], index) => {
+        if (b === selectedGeneration) {
+          selectedIndex = index;
+        }
+      });
+
+      return selectedIndex;
+    },
+    []
+  );
 
   return (
     <Modal>
       <Modal.Button
+        disabled={isLoading}
         className={
           "bg-primaryGray px-4 py-1 rounded-lg text-white hover:border-transparent focus:outline-none " +
           " " +
@@ -86,12 +104,34 @@ const PokemonGenerations = ({
         }
       >
         <div className="flex justify-between">
-          <PokemonIcon src={importPokemonImage("bulbasaur")} alt="Bulbasaur" />
-          <PokemonIcon
-            src={importPokemonImage("charmander")}
-            alt="Charmander"
-          />
-          <PokemonIcon src={importPokemonImage("squirtle")} alt="Squirtle" />
+          {selectedGeneration !== null ? (
+            <>
+              {generations[pokemonGenerationsToIndex(selectedGeneration)].map(
+                (image, index) => (
+                  <PokemonIcon
+                    key={`${image}-${index}`}
+                    src={image}
+                    alt={`Pokemon Icon Image`}
+                  />
+                )
+              )}
+            </>
+          ) : (
+            <>
+              <PokemonIcon
+                src={importPokemonImage("bulbasaur")}
+                alt="Bulbasaur"
+              />
+              <PokemonIcon
+                src={importPokemonImage("charmander")}
+                alt="Charmander"
+              />
+              <PokemonIcon
+                src={importPokemonImage("squirtle")}
+                alt="Squirtle"
+              />
+            </>
+          )}
         </div>
       </Modal.Button>
       <Modal.Content
