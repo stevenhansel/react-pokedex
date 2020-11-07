@@ -7,6 +7,13 @@ module.exports = {
       "1/2": "50%",
       "3/4": "75%",
       full: "100%",
+      72: "18rem",
+      84: "21rem",
+      96: "24rem",
+      108: "27rem",
+      120: "30rem",
+      132: "33rem",
+      154: "36rem",
     },
     extend: {
       fontFamily: {

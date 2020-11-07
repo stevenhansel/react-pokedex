@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { RouteComponentProps } from "react-router";
@@ -36,6 +36,8 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
 
   const pokemons = useSelector(pokemonsSelector);
   const species = useSelector(speciesSelector);
+  const tabRef = useRef<HTMLDivElement | null>(null);
+
   const selectedPokemon = pokemons.data.find(
     (pokemon) => pokemon !== null && pokemon.id === Number(id)
   );
@@ -64,7 +66,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
       {species.status.state === SliceStatus.IDLE ||
       species.status.state === SliceStatus.LOADING ? (
         <div className="text-center mx-auto mt-12">
-          <ScaleLoader />
+          <ScaleLoader color="#E3350D" radius={16} />
         </div>
       ) : (
         <>
@@ -110,7 +112,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                         Evolutions
                       </Tab>
                     </div>
-                    <div className="relative mt-8 h-108 lg:h-154 overflow-y-scroll">
+                    <div className="relative mt-8 lg:h-132 lg:overflow-y-scroll">
                       {transitions.map(({ item, key, props }) => {
                         let page: JSX.Element = (
                           <PokemonDetailsBiography
@@ -142,7 +144,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                             key={key}
                             style={{
                               ...props,
-                              position: "absolute",
+                              position: "relative",
                               width: "100%",
                               height: "100%",
                             }}
