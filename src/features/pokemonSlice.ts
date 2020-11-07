@@ -131,9 +131,10 @@ const transformSpriteToBaseImage = (pokemonId: number): string => {
 
 export const getPokemons = wrapReduxAsyncHandler(
   statusHandler,
-  async (dispatch, { page, cachedPokemons }) => {
-    const results = cachedPokemons.slice(page, page + PAGINATE_SIZE);
-    dispatch(initializePokemonsReducer({ size: PAGINATE_SIZE }));
+  async (dispatch, { page, cachedPokemons, pokemons }) => {
+    const size = PAGINATE_SIZE - (pokemons.length % PAGINATE_SIZE);
+    const results = cachedPokemons.slice(page, page + size);
+    dispatch(initializePokemonsReducer({ size }));
 
     for await (const [index, { url }] of results.entries()) {
       const pokemonId = Number(url.split("/").slice(-2)[0]);
@@ -148,7 +149,7 @@ export const getPokemons = wrapReduxAsyncHandler(
               frontDefault: pokemonImageUrl,
             },
           },
-          size: PAGINATE_SIZE,
+          size,
           index,
         })
       );

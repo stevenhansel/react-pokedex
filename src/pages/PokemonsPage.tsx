@@ -22,7 +22,11 @@ const PokemonsPage = () => {
 
       <InfiniteScroll
         paginationHandler={(page: number) =>
-          getPokemons({ page, cachedPokemons: cachedPokemons.data })
+          getPokemons({
+            page,
+            cachedPokemons: cachedPokemons.data,
+            pokemons: pokemons.data,
+          })
         }
         isLoading={pokemons.status.state === SliceStatus.LOADING}
       >
