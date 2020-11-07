@@ -136,7 +136,15 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                             );
                             break;
                           case "evolutions":
-                            page = <PokemonDetailsEvolutions />;
+                            page = (
+                              <PokemonDetailsEvolutions
+                                pokemon={selectedPokemon}
+                                species={selectedSpecies}
+                                selectedBackgroundColor={
+                                  selectedBackgroundColor
+                                }
+                              />
+                            );
                             break;
                           default:
                             break;
