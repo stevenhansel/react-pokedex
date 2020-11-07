@@ -86,7 +86,7 @@ const PokemonDetailsHeader = ({
           </h1>
         </div>
 
-        <div className="relative text-center mx-auto w-full h-96 mt-8">
+        <div className="relative text-center mx-auto w-full h-96 mt-8 lg:mt-24">
           <h1 className="absolute -mt-2 text-6xl z-0 w-full text-white opacity-50 font-extrabold overflow-hidden">
             {kanjiName && kanjiName.name}
           </h1>

@@ -25,7 +25,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
   const { id } = match.params;
   const dispatch = useDispatch();
   const history = useHistory();
-  const [activeTab, setActiveTab] = useState<PokemonTabs>("stats");
+  const [activeTab, setActiveTab] = useState<PokemonTabs>("evolutions");
   const transitions = useTransition(activeTab, (p) => p, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -72,7 +72,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
         <>
           <>
             {selectedPokemon && selectedSpecies && selectedBackgroundColor && (
-              <>
+              <div className="pb-8">
                 <button
                   className="text-primary font-semibold transform hover:-translate-y-1 transition-transform ease-in duration-150 focus:outline-none"
                   onClick={() => history.push("/")}
@@ -112,7 +112,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                         Evolutions
                       </Tab>
                     </div>
-                    <div className="relative mt-8 lg:h-132 lg:overflow-y-scroll">
+                    <div className="relative mt-8 lg:h-178">
                       {transitions.map(({ item, key, props }) => {
                         let page: JSX.Element = (
                           <PokemonDetailsBiography
@@ -158,7 +158,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                     </div>
                   </div>
                 </div>
-              </>
+              </div>
             )}
           </>
         </>

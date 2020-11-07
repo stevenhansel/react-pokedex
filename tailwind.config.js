@@ -40,6 +40,8 @@ module.exports = {
         120: "30rem",
         132: "33rem",
         154: "36rem",
+        166: "39rem",
+        178: "42rem",
       },
       colors: {
         primary: "#E3350D",
@@ -49,9 +51,6 @@ module.exports = {
         tertiaryGray: "#8A8A8A",
         darkGray: "#8C8C8C",
         darkerGray: "#6D6D6D",
-        primaryYellow: "",
-        primaryBlue: "",
-        primaryGreen: "",
       },
     },
   },

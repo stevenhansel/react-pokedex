@@ -11,7 +11,7 @@ const Tab = ({ children, handleSelect, isSelected }: Props) => {
     <button
       className={
         "inline-block pb-3 focus:outline-none transition-all duration-100" +
-        (isSelected && " border-b-2 border-primary font-medium")
+        (isSelected && " border-b-2 border-primary font-semibold")
       }
       onClick={handleSelect}
     >

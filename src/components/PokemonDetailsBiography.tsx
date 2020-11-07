@@ -104,7 +104,9 @@ const PokemonDetailsBiography = ({ pokemon, species }: Props) => {
           />
           <PokemonInformation
             title="Growth Rate"
-            content={species.growthRate.name}
+            content={
+              <span className="capitalize">{species.growthRate.name}</span>
+            }
           />
         </ul>
       </div>
