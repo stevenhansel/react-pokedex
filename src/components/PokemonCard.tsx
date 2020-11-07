@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useRef } from "react";
 import { Pokemon } from "../features/pokemonSlice";
 import { PokemonTypeColors, PokemonTypePlaceholders } from "../globals";
 import { leftPad } from "../utils/leftPad";
@@ -6,6 +6,7 @@ import { useSpring, animated } from "react-spring";
 import Trail from "./Trail";
 import ProgressiveImage from "react-progressive-image-loading";
 import { useHistory } from "react-router-dom";
+import { useResize } from "../hooks/useResize";
 
 const MaskStyling = {
   width: 130,
@@ -19,37 +20,14 @@ const ImageContainerStyling = {
   height: 175,
 };
 
-type Props = Pokemon & {
-  position: number;
-  numCols: number;
-};
+type Props = Pokemon;
 
-const calc = (x: number, y: number, position: number, numCols: number) => {
+const calc = (x: number, y: number, width: number, height: number) => {
   const WINDOW_DIVIDER = 60;
-  const Y_DIVIDER = 0.5;
-  let positionDivider: number = 0.5;
-
-  switch (numCols) {
-    case 1:
-      positionDivider = 0.5;
-      break;
-    case 2:
-      if (position === 0) positionDivider = 0.3;
-      if (position === 1) positionDivider = 0.7;
-      break;
-    case 3:
-      if (position === 0) positionDivider = 0.25;
-      if (position === 1) positionDivider = 0.5;
-      if (position === 2) positionDivider = 0.75;
-      break;
-    default:
-      break;
-  }
-
   return [
-    -(y - window.innerHeight * Y_DIVIDER) / WINDOW_DIVIDER,
-    (x - window.innerWidth * positionDivider) / WINDOW_DIVIDER,
-    1,
+    -(y - height / 2) / WINDOW_DIVIDER,
+    (x - width / 2) / WINDOW_DIVIDER,
+    1.025,
   ];
 };
 
@@ -57,33 +35,38 @@ const trans = (x: number, y: number, z: number) => {
   return `perspective(600px) rotateX(${x}deg) rotateY(${y}deg) scale(${z})`;
 };
 
-const PokemonCard = React.memo(
-  ({ id, name, sprites, types, position, numCols }: Props) => {
-    const history = useHistory();
-    const backgroundColors = types.map(({ type }) => {
-      const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
-        ([key, _]) => key === type.name
-      );
+const PokemonCard = ({ id, name, sprites, types }: Props) => {
+  const history = useHistory();
+  const [props, set] = useSpring(() => ({
+    xys: [0, 0, 1],
+    config: { mass: 8, tension: 350, friction: 40 },
+  }));
+  const cardRef = useRef<HTMLDivElement | null>(null);
+  const { width, height, top, left } = useResize(cardRef);
 
-      return backgroundColor;
-    });
-    const imagePlaceholder = types.map(({ type }) => {
-      const [[, image]] = Object.entries(PokemonTypePlaceholders).filter(
-        ([key, _]) => key === type.name
-      );
+  const backgroundColors = types.map(({ type }) => {
+    const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
+      ([key, _]) => key === type.name
+    );
 
-      return image;
-    });
-    const [props, set] = useSpring(() => ({
-      xys: [0, 0, 1],
-      config: { mass: 8, tension: 350, friction: 40 },
-    }));
+    return backgroundColor;
+  });
+  const imagePlaceholder = types.map(({ type }) => {
+    const [[, image]] = Object.entries(PokemonTypePlaceholders).filter(
+      ([key, _]) => key === type.name
+    );
 
-    return (
+    return image;
+  });
+
+  return (
+    <div ref={cardRef}>
       <Trail open={true}>
         <animated.div
-          onMouseMove={({ clientX: x, clientY: y }) =>
-            set({ xys: calc(x, y, position, numCols) })
+          onMouseMove={({ clientX, clientY }) =>
+            set({
+              xys: calc(clientX - left, clientY - top, width, height - top),
+            })
           }
           onMouseLeave={() => set({ xys: [0, 0, 1] })}
           className="w-full rounded-lg overflow-hidden shadow-lg mx-auto cursor-pointer hover:shadow-2xl transition-all duration-75 ease-in-out"
@@ -146,9 +129,8 @@ const PokemonCard = React.memo(
           </div>
         </animated.div>
       </Trail>
-    );
-  },
-  (previousProps, nextProps) => previousProps.id === nextProps.id
-);
+    </div>
+  );
+};
 
 export default PokemonCard;

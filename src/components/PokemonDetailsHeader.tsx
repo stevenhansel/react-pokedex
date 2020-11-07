@@ -24,7 +24,7 @@ const ImageSize = 325;
 const MaskStyling = {
   width: MaskSize,
   height: MaskSize,
-  bottom: 50,
+  bottom: 55,
 };
 
 const PokemonImageStyling = {
@@ -73,7 +73,7 @@ const PokemonDetailsHeader = ({
         ref={containerRef}
         onMouseMove={({ clientX, clientY }) =>
           set({
-            xy: calc(clientX, clientY, width + left + 225, height + top),
+            xy: calc(clientX - left, clientY - top, width + left, height + top),
           })
         }
       >

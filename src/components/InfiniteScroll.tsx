@@ -1,8 +1,7 @@
-import React, { useEffect, useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext } from "react";
 import { useDispatch } from "react-redux";
 import { getPokemons, PAGINATE_SIZE } from "../features/pokemonSlice";
 import { PokemonGenerationsEnum } from "../features/cachedPokemonsSlice";
-import useTailwindMediaQuery from "../hooks/useTailwindMediaQuery";
 import LoadButton from "./LoadButton";
 import { randomize } from "../utils/randomize";
 import { Waypoint as ReactWaypoint } from "react-waypoint";
@@ -10,8 +9,6 @@ import { Waypoint as ReactWaypoint } from "react-waypoint";
 type ContextType = {
   page: number;
   setPage: React.Dispatch<React.SetStateAction<number>>;
-  numCols: number;
-  setNumCols: React.Dispatch<React.SetStateAction<number>>;
   isLoading: boolean;
   paginationHandler: (
     page: number
@@ -20,8 +17,6 @@ type ContextType = {
 const InfiniteScrollContext = createContext<ContextType>({
   page: 0,
   setPage: () => {},
-  numCols: 0,
-  setNumCols: () => {},
   isLoading: true,
   paginationHandler: getPokemons,
 });
@@ -63,14 +58,12 @@ const Button = () => {
 };
 
 type ContainerProps = {
-  children: ({ numCols }: { numCols: number }) => React.ReactNode;
+  children: React.ReactNode;
 };
 const Container = ({ children }: ContainerProps) => {
-  const { numCols } = useContext(InfiniteScrollContext);
-
   return (
     <div className="w-full mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 lg:gap-x-5 gap-y-6">
-      {children({ numCols })}
+      {children}
     </div>
   );
 };
@@ -92,34 +85,16 @@ const InfiniteScroll = ({
   paginationHandler,
   isLoading,
 }: InfiniteScrollProps) => {
-  const { isSmall, isLarge } = useTailwindMediaQuery();
   const [page, setPage] = useState(
     randomize(0, Number(PokemonGenerationsEnum.GENERATION_7) - PAGINATE_SIZE)
   );
-  const [numCols, setNumCols] = useState(1);
-
-  useEffect(() => {
-    let col: number;
-
-    if (isSmall) {
-      col = 2;
-    }
-    if (isLarge) {
-      col = 3;
-    } else {
-      col = 1;
-    }
-
-    setNumCols(col);
-  }, [isSmall, isLarge]);
 
   return (
     <InfiniteScrollContext.Provider
       value={{
         page,
         setPage,
-        numCols,
-        setNumCols,
+
         isLoading,
         paginationHandler,
       }}

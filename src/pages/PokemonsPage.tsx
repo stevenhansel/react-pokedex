@@ -45,23 +45,14 @@ const PokemonsPage = () => {
               ) && (
                 <>
                   <InfiniteScroll.Container>
-                    {({ numCols }) => (
-                      <>
-                        {pokemons.data.map((pokemon, index) =>
-                          pokemon === null ? (
-                            <div key={`loading-${index}`}>
-                              <PokemonSkeleton />
-                            </div>
-                          ) : (
-                            <PokemonCard
-                              key={pokemon.id}
-                              {...pokemon}
-                              position={index % numCols}
-                              numCols={numCols}
-                            />
-                          )
-                        )}
-                      </>
+                    {pokemons.data.map((pokemon, index) =>
+                      pokemon === null ? (
+                        <div key={`loading-${index}`}>
+                          <PokemonSkeleton />
+                        </div>
+                      ) : (
+                        <PokemonCard key={pokemon.id} {...pokemon} />
+                      )
                     )}
                   </InfiniteScroll.Container>
                   <InfiniteScroll.Waypoint />
