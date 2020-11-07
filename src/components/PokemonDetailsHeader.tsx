@@ -1,20 +1,35 @@
-import React from "react";
+import React, { useRef } from "react";
 import ProgressiveImage from "react-progressive-image-loading";
 import { useSpring, animated } from "react-spring";
 import { Pokemon } from "../features/pokemonSlice";
 import { Species } from "../features/speciesSlice";
 import { PokemonTypePlaceholders } from "../globals";
+import { useResize } from "../hooks/useResize";
 import { leftPad } from "../utils/leftPad";
 
+const calc = (x: number, y: number, width: number, height: number) => [
+  x - width / 2,
+  y - height / 2,
+];
+
+const trans1 = (x: number, y: number) =>
+  `translate3d(-${x / 30}px,-${y / 30}px,0)`;
+
+const trans2 = (x: number, y: number) =>
+  `translate3d(${x / 20}px,${y / 20}px,0)`;
+
+const MaskSize = 225;
+const ImageSize = 325;
+
 const MaskStyling = {
-  width: 225,
-  height: 225,
-  bottom: 60,
+  width: MaskSize,
+  height: MaskSize,
+  bottom: 50,
 };
 
 const PokemonImageStyling = {
-  width: 325,
-  height: 325,
+  width: ImageSize,
+  height: ImageSize,
   display: "block",
   left: 0,
   right: 0,
@@ -33,6 +48,8 @@ const PokemonDetailsHeader = ({
   species,
   selectedBackgroundColor,
 }: Props) => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const { width, height, top, left } = useResize(containerRef);
   const [props, set] = useSpring(() => ({
     xy: [0, 0],
     config: { mass: 10, tension: 550, friction: 140 },
@@ -51,7 +68,15 @@ const PokemonDetailsHeader = ({
 
   return (
     <>
-      <div className="w-full">
+      <div
+        className="w-full"
+        ref={containerRef}
+        onMouseMove={({ clientX, clientY }) =>
+          set({
+            xy: calc(clientX, clientY, width + left + 225, height + top),
+          })
+        }
+      >
         <div className="px-4 md:px-8">
           <p className="text-md mt-4 text-white font-medium">
             #{leftPad(pokemon.id, 3)}
@@ -66,34 +91,38 @@ const PokemonDetailsHeader = ({
             {kanjiName && kanjiName.name}
           </h1>
 
-          <div>
-            <animated.div>
-              <div
-                className="rounded-full absolute inset-x-auto mx-auto z-0 inline-block left-0 right-0"
-                style={{
-                  ...MaskStyling,
-                  backgroundColor: selectedBackgroundColor.light,
-                }}
-              />
-            </animated.div>
-            <animated.div>
-              <ProgressiveImage
-                preview={imagePlaceholder[0]}
-                src={pokemon.sprites.frontDefault}
-                render={(src, style) => (
-                  <img
-                    src={src}
-                    alt={pokemon.name}
-                    style={{
-                      ...style,
-                      ...PokemonImageStyling,
-                      position: "absolute",
-                    }}
-                  />
-                )}
-              />
-            </animated.div>
-          </div>
+          <animated.div
+            style={{
+              ...MaskStyling,
+              backgroundColor: selectedBackgroundColor.light,
+              //@ts-ignore
+              transform: props.xy.interpolate(trans1),
+            }}
+            className="rounded-full absolute inset-x-auto mx-auto z-0 inline-block left-0 right-0"
+          />
+
+          <animated.div
+            style={{
+              ...PokemonImageStyling,
+              position: "absolute",
+              //@ts-ignore
+              transform: props.xy.interpolate(trans2),
+            }}
+          >
+            <ProgressiveImage
+              preview={imagePlaceholder[0]}
+              src={pokemon.sprites.frontDefault}
+              render={(src, style) => (
+                <img
+                  src={src}
+                  alt={pokemon.name}
+                  style={{
+                    ...style,
+                  }}
+                />
+              )}
+            />
+          </animated.div>
         </div>
       </div>
       <div className="-mt-12" />

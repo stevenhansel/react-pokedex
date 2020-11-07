@@ -12,7 +12,6 @@ type Props = {
 const PokemonDetailsBiography = ({ pokemon, species }: Props) => {
   const inches = (pokemon.height * 3.93701).toFixed(0);
   const feet = Math.floor(Number(inches) / 12);
-  console.log(species);
   const genderPercentage =
     species.genderRate !== -1 ? (species.genderRate / 8) * 100 : -1;
 
