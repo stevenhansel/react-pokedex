@@ -13,6 +13,7 @@ import { getSpeciesById, speciesSelector } from "../features/speciesSlice";
 import { PokemonTypeColors, SliceStatus } from "../globals";
 import { ScaleLoader } from "react-spinners";
 import { useTransition, animated } from "react-spring";
+import { capitalize } from "../utils/capitalize";
 
 type PokemonTabs = "biography" | "stats" | "evolutions";
 
@@ -61,7 +62,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
   const selectedBackgroundColor = backgroundColors && backgroundColors[0];
 
   return (
-    <Layout title="Pokemon Details">
+    <Layout title={capitalize(selectedPokemon?.name)}>
       {species.status.state === SliceStatus.IDLE ||
       species.status.state === SliceStatus.LOADING ? (
         <div className="text-center mx-auto mt-12">
