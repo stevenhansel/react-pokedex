@@ -47,6 +47,8 @@ module.exports = {
         primaryGray: "#DEDEDE",
         secondaryGray: "#ACAAAA",
         tertiaryGray: "#8A8A8A",
+        darkGray: "#8C8C8C",
+        darkerGray: "#6D6D6D",
         primaryYellow: "",
         primaryBlue: "",
         primaryGreen: "",

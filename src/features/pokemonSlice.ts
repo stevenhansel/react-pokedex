@@ -163,7 +163,7 @@ export const getPokemonById = wrapReduxAsyncHandler(
     const pokemon = await fromApi.getPokemonById(pokemonId);
     const pokemonImageUrl = transformSpriteToBaseImage(pokemon.id);
     const transformedPokemon = {
-      ...pokemon,
+      ...camelcaseObject(pokemon),
       sprites: { frontDefault: pokemonImageUrl },
     };
     dispatch(getSinglePokemonReducer({ pokemon: transformedPokemon }));

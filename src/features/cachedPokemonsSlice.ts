@@ -6,6 +6,7 @@ import { NamedAPIResource } from "./types";
 import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
 import Levenshtein from "fast-levenshtein";
 import { shuffle } from "../utils/shuffle";
+import { camelcaseObject } from "../utils/camelcaseObject";
 
 export enum PokemonGenerationsEnum {
   GENERATION_1 = "151",
@@ -115,12 +116,13 @@ export const getCachedPokemons = wrapReduxAsyncHandler(
     }: { results: NamedAPIResource[] } = await fromApi.getPokemons(
       Number(PokemonGenerationsEnum.GENERATION_7)
     );
-    const transformedPokemons = results.map((res) => ({ ...res, distance: 0 }));
-    console.log(transformedPokemons);
-
+    const transformedPokemons = results.map((res: NamedAPIResource) => ({
+      ...res,
+      distance: 0,
+    }));
     dispatch(
       getCachedPokemonsReducer({
-        cachedPokemons: transformedPokemons,
+        cachedPokemons: camelcaseObject(transformedPokemons),
       })
     );
   }

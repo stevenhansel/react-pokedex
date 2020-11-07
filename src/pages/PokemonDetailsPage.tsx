@@ -25,7 +25,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
   const { id } = match.params;
   const dispatch = useDispatch();
   const history = useHistory();
-  const [activeTab, setActiveTab] = useState<PokemonTabs>("biography");
+  const [activeTab, setActiveTab] = useState<PokemonTabs>("stats");
   const transitions = useTransition(activeTab, (p) => p, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -91,7 +91,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                     species={selectedSpecies}
                     selectedBackgroundColor={selectedBackgroundColor}
                   />
-                  <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden w-full pt-16 lg:pt-8 px-4 md:px-8 lg:px-12">
+                  <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden w-full pt-16 lg:pt-8 px-6 md:px-12 lg:px-24">
                     <div className="flex flex-row justify-between w-full">
                       <Tab
                         handleSelect={() => setActiveTab("biography")}
@@ -131,7 +131,9 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                             );
                             break;
                           case "stats":
-                            page = <PokemonDetailsStats />;
+                            page = (
+                              <PokemonDetailsStats pokemon={selectedPokemon} />
+                            );
                             break;
                           case "evolutions":
                             page = <PokemonDetailsEvolutions />;

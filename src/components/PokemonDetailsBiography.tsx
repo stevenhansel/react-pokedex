@@ -20,7 +20,7 @@ const PokemonDetailsBiography = ({ pokemon, species }: Props) => {
     <>
       <div>
         <h2 className="font-semibold text-lg">Pokémon Data</h2>
-        <p className="mt-4 opacity-75">
+        <p className="mt-4 text-darkerGray">
           {
             species.flavorTextEntries.find(
               (text) => text.language.name === "en"
