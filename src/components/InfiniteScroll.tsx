@@ -1,9 +1,7 @@
 import React, { useState, useContext, createContext } from "react";
 import { useDispatch } from "react-redux";
 import { getPokemons, PAGINATE_SIZE } from "../features/pokemonSlice";
-import { PokemonGenerationsEnum } from "../features/cachedPokemonsSlice";
 import LoadButton from "./LoadButton";
-import { randomize } from "../utils/randomize";
 import { Waypoint as ReactWaypoint } from "react-waypoint";
 
 type ContextType = {
@@ -85,16 +83,13 @@ const InfiniteScroll = ({
   paginationHandler,
   isLoading,
 }: InfiniteScrollProps) => {
-  const [page, setPage] = useState(
-    randomize(0, Number(PokemonGenerationsEnum.GENERATION_7) - PAGINATE_SIZE)
-  );
+  const [page, setPage] = useState(0);
 
   return (
     <InfiniteScrollContext.Provider
       value={{
         page,
         setPage,
-
         isLoading,
         paginationHandler,
       }}

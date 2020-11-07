@@ -5,14 +5,13 @@ import {
   PokemonGenerationsEnum,
   searchPokemonsByNameReducer,
   filterPokemonsByGenerationReducer,
+  randomizePokemonsReducer,
 } from "../features/cachedPokemonsSlice";
 import {
-  PAGINATE_SIZE,
   pokemonsSelector,
   resetPokemonsReducer,
 } from "../features/pokemonSlice";
 import { SliceStatus } from "../globals";
-import { randomize } from "../utils/randomize";
 import PokemonGenerations from "./PokemonGenerations";
 
 type Props = {
@@ -61,12 +60,8 @@ const PokemonForm = ({
       dispatch(resetPokemonsReducer({}));
       dispatch(filterPokemonsByGenerationReducer({ selectedGeneration }));
       if (selectedGeneration === null) {
-        mutatePage(
-          randomize(
-            0,
-            Number(PokemonGenerationsEnum.GENERATION_7) - PAGINATE_SIZE
-          )
-        );
+        dispatch(randomizePokemonsReducer({}));
+        mutatePage(0);
       } else {
         mutatePage(0);
       }

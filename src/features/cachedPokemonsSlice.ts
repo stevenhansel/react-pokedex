@@ -5,6 +5,7 @@ import { RootState } from "./store";
 import { NamedAPIResource } from "./types";
 import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
 import Levenshtein from "fast-levenshtein";
+import { shuffle } from "../utils/shuffle";
 
 export enum PokemonGenerationsEnum {
   GENERATION_1 = "151",
@@ -39,17 +40,13 @@ const cachedPokemonsSlice = createSlice({
     ...statusHandlerReducer,
     getCachedPokemonsReducer(
       state,
-      action: PayloadAction<{ cachedPokemons: NamedAPIResource[] }>
+      action: PayloadAction<{
+        cachedPokemons: (NamedAPIResource & { distance: number })[];
+      }>
     ) {
       const { cachedPokemons } = action.payload;
-      const transformedCache = cachedPokemons.map((pokemon) => {
-        return {
-          ...pokemon,
-          distance: 0,
-        };
-      });
-      state.cache = transformedCache;
-      state.data = transformedCache;
+      state.cache = cachedPokemons;
+      state.data = shuffle([...cachedPokemons]);
     },
     searchPokemonsByNameReducer(
       state,
@@ -59,7 +56,7 @@ const cachedPokemonsSlice = createSlice({
     ) {
       const { pokemonName } = action.payload;
 
-      state.data = state.data
+      state.data = state.cache
         .map((pokemon) => {
           return {
             ...pokemon,
@@ -76,7 +73,6 @@ const cachedPokemonsSlice = createSlice({
     ) {
       const { selectedGeneration } = action.payload;
       let cache: (NamedAPIResource & { distance: number })[] = state.cache;
-
       if (selectedGeneration) {
         const generations = Object.entries(PokemonGenerationsEnum);
         let startingIndex: number = 0;
@@ -87,8 +83,10 @@ const cachedPokemonsSlice = createSlice({
         });
         cache = state.cache.slice(startingIndex, Number(selectedGeneration));
       }
-
       state.data = cache;
+    },
+    randomizePokemonsReducer(state, action) {
+      state.data = shuffle([...state.cache]);
     },
   },
 });
@@ -101,6 +99,7 @@ export const {
   getCachedPokemonsReducer,
   searchPokemonsByNameReducer,
   filterPokemonsByGenerationReducer,
+  randomizePokemonsReducer,
 } = cachedPokemonsSlice.actions;
 
 const statusHandler = { initialize, error, success };
@@ -116,6 +115,13 @@ export const getCachedPokemons = wrapReduxAsyncHandler(
     }: { results: NamedAPIResource[] } = await fromApi.getPokemons(
       Number(PokemonGenerationsEnum.GENERATION_7)
     );
-    dispatch(getCachedPokemonsReducer({ cachedPokemons: results }));
+    const transformedPokemons = results.map((res) => ({ ...res, distance: 0 }));
+    console.log(transformedPokemons);
+
+    dispatch(
+      getCachedPokemonsReducer({
+        cachedPokemons: transformedPokemons,
+      })
+    );
   }
 );
