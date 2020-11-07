@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import fromApi from "../api/fromApi";
 import { SliceStatus } from "../globals";
+import { camelcaseObject } from "../utils/camelcaseObject";
 import { RootState } from "./store";
 import { APIResource, NamedAPIResource } from "./types";
 import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
@@ -107,7 +108,7 @@ export const getSpeciesByName = wrapReduxAsyncHandler(
   statusHandler,
   async (dispatch, { pokemonName }) => {
     const pokemonSpecies = await fromApi.getSpeciesByName(pokemonName);
-    dispatch(getSpeciesReducer({ species: pokemonSpecies }));
+    dispatch(getSpeciesReducer({ species: camelcaseObject(pokemonSpecies) }));
   }
 );
 
@@ -115,6 +116,7 @@ export const getSpeciesById = wrapReduxAsyncHandler(
   statusHandler,
   async (dispatch, { pokemonId }) => {
     const pokemonSpecies = await fromApi.getSpeciesById(pokemonId);
-    dispatch(getSpeciesReducer({ species: pokemonSpecies }));
+
+    dispatch(getSpeciesReducer({ species: camelcaseObject(pokemonSpecies) }));
   }
 );

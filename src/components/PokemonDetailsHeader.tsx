@@ -1,5 +1,6 @@
 import React from "react";
 import ProgressiveImage from "react-progressive-image-loading";
+import { useSpring, animated } from "react-spring";
 import { Pokemon } from "../features/pokemonSlice";
 import { Species } from "../features/speciesSlice";
 import { PokemonTypePlaceholders } from "../globals";
@@ -32,6 +33,11 @@ const PokemonDetailsHeader = ({
   species,
   selectedBackgroundColor,
 }: Props) => {
+  const [props, set] = useSpring(() => ({
+    xy: [0, 0],
+    config: { mass: 10, tension: 550, friction: 140 },
+  }));
+
   const kanjiName = species.names.find(
     (name) => name.language.name === "ja-Hrkt"
   );
@@ -55,33 +61,39 @@ const PokemonDetailsHeader = ({
           </h1>
         </div>
 
-        <div className="relative text-center mx-auto w-full h-96">
+        <div className="relative text-center mx-auto w-full h-96 mt-8">
           <h1 className="absolute -mt-2 text-6xl z-0 w-full text-white opacity-50 font-extrabold overflow-hidden">
             {kanjiName && kanjiName.name}
           </h1>
 
-          <div
-            className="rounded-full absolute inset-x-auto mx-auto z-0 inline-block left-0 right-0"
-            style={{
-              ...MaskStyling,
-              backgroundColor: selectedBackgroundColor.light,
-            }}
-          />
-          <ProgressiveImage
-            preview={imagePlaceholder[0]}
-            src={pokemon.sprites.frontDefault}
-            render={(src, style) => (
-              <img
-                src={src}
-                alt={pokemon.name}
+          <div>
+            <animated.div>
+              <div
+                className="rounded-full absolute inset-x-auto mx-auto z-0 inline-block left-0 right-0"
                 style={{
-                  ...style,
-                  ...PokemonImageStyling,
-                  position: "absolute",
+                  ...MaskStyling,
+                  backgroundColor: selectedBackgroundColor.light,
                 }}
               />
-            )}
-          />
+            </animated.div>
+            <animated.div>
+              <ProgressiveImage
+                preview={imagePlaceholder[0]}
+                src={pokemon.sprites.frontDefault}
+                render={(src, style) => (
+                  <img
+                    src={src}
+                    alt={pokemon.name}
+                    style={{
+                      ...style,
+                      ...PokemonImageStyling,
+                      position: "absolute",
+                    }}
+                  />
+                )}
+              />
+            </animated.div>
+          </div>
         </div>
       </div>
       <div className="-mt-12" />

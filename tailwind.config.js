@@ -31,6 +31,8 @@ module.exports = {
         96: "24rem",
         108: "27rem",
         120: "30rem",
+        132: "33rem",
+        154: "36rem",
       },
       colors: {
         primary: "#E3350D",

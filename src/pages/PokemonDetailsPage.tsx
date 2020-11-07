@@ -12,6 +12,7 @@ import { getPokemonById, pokemonsSelector } from "../features/pokemonSlice";
 import { getSpeciesById, speciesSelector } from "../features/speciesSlice";
 import { PokemonTypeColors, SliceStatus } from "../globals";
 import { ScaleLoader } from "react-spinners";
+import { useTransition, animated } from "react-spring";
 
 type PokemonTabs = "biography" | "stats" | "evolutions";
 
@@ -24,12 +25,21 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const [activeTab, setActiveTab] = useState<PokemonTabs>("biography");
+  const transitions = useTransition(activeTab, (p) => p, {
+    from: { opacity: 0 },
+    enter: { opacity: 1 },
+    leave: { opacity: 0 },
+    config: {
+      duration: 250,
+    },
+  });
+
   const pokemons = useSelector(pokemonsSelector);
   const species = useSelector(speciesSelector);
   const selectedPokemon = pokemons.data.find(
     (pokemon) => pokemon !== null && pokemon.id === Number(id)
   );
-  const selectedSpecies = species?.data.find((s) => s.id === Number(id));
+  const selectedSpecies = species.data.find((s) => s.id === Number(id));
 
   useEffect(() => {
     if (pokemons.data.length === 0) {
@@ -68,7 +78,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                   <span className="text-primary font-semibold">Go Back</span>
                 </button>
                 <div
-                  className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto mt-4 rounded-lg shadow-lg"
+                  className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto my-4 rounded-lg shadow-lg"
                   style={{
                     backgroundColor:
                       selectedBackgroundColor && selectedBackgroundColor.medium,
@@ -79,9 +89,8 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                     species={selectedSpecies}
                     selectedBackgroundColor={selectedBackgroundColor}
                   />
-
-                  <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden lg:overflow-y-scroll w-full pt-16 lg:pt-8 px-4 md:px-8 lg:px-12">
-                    <div className="flex flex-row justify-evenly w-full">
+                  <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden w-full pt-16 lg:pt-8 px-4 md:px-8 lg:px-12">
+                    <div className="flex flex-row justify-between w-full">
                       <Tab
                         handleSelect={() => setActiveTab("biography")}
                         isSelected={activeTab === "biography"}
@@ -101,12 +110,47 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                         Evolutions
                       </Tab>
                     </div>
-                    <div className="lg:h-120">
-                      {activeTab === "biography" && <PokemonDetailsBiography />}
-                      {activeTab === "stats" && <PokemonDetailsStats />}
-                      {activeTab === "evolutions" && (
-                        <PokemonDetailsEvolutions />
-                      )}
+                    <div className="relative mt-8 h-108 lg:h-154 overflow-y-scroll">
+                      {transitions.map(({ item, key, props }) => {
+                        let page: JSX.Element = (
+                          <PokemonDetailsBiography
+                            species={selectedSpecies}
+                            pokemon={selectedPokemon}
+                          />
+                        );
+
+                        switch (item) {
+                          case "biography":
+                            page = (
+                              <PokemonDetailsBiography
+                                species={selectedSpecies}
+                                pokemon={selectedPokemon}
+                              />
+                            );
+                            break;
+                          case "stats":
+                            page = <PokemonDetailsStats />;
+                            break;
+                          case "evolutions":
+                            page = <PokemonDetailsEvolutions />;
+                            break;
+                          default:
+                            break;
+                        }
+                        return (
+                          <animated.div
+                            key={key}
+                            style={{
+                              ...props,
+                              position: "absolute",
+                              width: "100%",
+                              height: "100%",
+                            }}
+                          >
+                            {page}
+                          </animated.div>
+                        );
+                      })}
                     </div>
                   </div>
                 </div>
