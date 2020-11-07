@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { RouteComponentProps } from "react-router";
@@ -36,7 +36,6 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
 
   const pokemons = useSelector(pokemonsSelector);
   const species = useSelector(speciesSelector);
-  const tabRef = useRef<HTMLDivElement | null>(null);
 
   const selectedPokemon = pokemons.data.find(
     (pokemon) => pokemon !== null && pokemon.id === Number(id)
