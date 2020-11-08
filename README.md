@@ -61,14 +61,14 @@ React Pokédex
 
 ## About The Project
 
-[![Product Name Screen Shot][https://imgur.com/bowjm3v]](https://pokedex.stevenhansel.com)
-
+![GIF Screenshot](https://github.com/ShinteiMai/react-pokedex/blob/master/images/screenshot.gif)
 ### Built With
 
-- [React]()
-- [TypeScript]()
-- [Tailwind CSS]()
-- [redux-toolkit]()
+- [PokéAPI](https://pokeapi.co/)
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [redux-toolkit](https://redux-toolkit.js.org/)
 
 <!-- GETTING STARTED -->
 
