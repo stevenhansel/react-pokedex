@@ -26,12 +26,14 @@
 [![MIT License][license-shield]][license-url]
 
 <!-- PROJECT LOGO -->
+
 <br />
 <p align="center">
 
   <h3 align="center">
 React Pokédex
   </h3>
+
 
   <p align="center">
   A simple pokédex made with React & PokéAPI
@@ -45,12 +47,14 @@ React Pokédex
   </p>
 </p>
 
+  ![GIF Screenshot](https://github.com/ShinteiMai/react-pokedex/blob/master/images/screenshot.gif)
+
+
 <!-- TABLE OF CONTENTS -->
 
 ## Table of Contents
 
-- [About the Project](#about-the-project)
-  - [Built With](#built-with)
+- [Built With](#built-with)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -59,10 +63,8 @@ React Pokédex
 
 <!-- ABOUT THE PROJECT -->
 
-## About The Project
 
-![GIF Screenshot](https://github.com/ShinteiMai/react-pokedex/blob/master/images/screenshot.gif)
-### Built With
+## Built With
 
 - [PokéAPI](https://pokeapi.co/)
 - [React](https://reactjs.org/)
