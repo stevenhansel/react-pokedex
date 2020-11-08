@@ -6,7 +6,7 @@ import { RootState } from "./store";
 import { NamedAPIResource } from "./types";
 import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
 
-type ChainLink = {
+export type ChainLink = {
   isBaby: boolean;
   species: NamedAPIResource;
   evolutionDetails: {
@@ -28,8 +28,8 @@ type ChainLink = {
     timeOfDay: string;
     tradeSpecies: NamedAPIResource;
     turnUpsideDown: boolean;
-  };
-  evolvesTo: ChainLink;
+  }[];
+  evolvesTo: ChainLink[];
 };
 
 export type EvolutionChain = {

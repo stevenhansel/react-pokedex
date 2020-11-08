@@ -5,6 +5,7 @@ import { PokemonTypePlaceholders } from "../globals";
 import { leftPad } from "../utils/leftPad";
 
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
+import { ChainLink } from "../features/evolutionChainSlice";
 
 const MaskSize = 200;
 const ImageSize = 150;
@@ -26,10 +27,15 @@ const ImageContainerStyling = {
 
 type Props = {
   pokemon: Pokemon;
+  chain: ChainLink | undefined;
   selectedBackgroundColor: { light: string; medium: string };
 };
 
-const PokemonEvolution = ({ pokemon, selectedBackgroundColor }: Props) => {
+const PokemonEvolution = ({
+  pokemon,
+  chain,
+  selectedBackgroundColor,
+}: Props) => {
   const imagePlaceholder = pokemon.types.map(({ type }) => {
     const [[, image]] = Object.entries(PokemonTypePlaceholders).filter(
       ([key, _]) => key === type.name
@@ -37,6 +43,7 @@ const PokemonEvolution = ({ pokemon, selectedBackgroundColor }: Props) => {
 
     return image;
   });
+  const minLevel = chain?.evolutionDetails[0]?.minLevel;
 
   return (
     <div className="mb-5 lg:mb-0 lg:flex lg:flex-row w-full">
@@ -69,12 +76,22 @@ const PokemonEvolution = ({ pokemon, selectedBackgroundColor }: Props) => {
         </p>
         <h1 className="capitalize font-semibold text-xl">{pokemon.name}</h1>
         <p className="text-black text-sm font-semibold text-opacity-75">
-          Level 16
+          {minLevel && `Level ${minLevel}`}
         </p>
       </div>
       <p className="flex items-center mx-auto mt-2 mb-4 lg:mb-0 lg:mt-0">
-        <AiOutlineCaretDown className="block mx-auto lg:hidden" size={24} />
-        <AiOutlineCaretRight className="hidden mx-auto lg:block" size={24} />
+        {chain?.evolvesTo.length !== 0 && (
+          <>
+            <AiOutlineCaretDown
+              className="block mx-auto lg:hidden opacity-75"
+              size={24}
+            />
+            <AiOutlineCaretRight
+              className="hidden mx-auto lg:block opacity-75"
+              size={24}
+            />
+          </>
+        )}
       </p>
     </div>
   );

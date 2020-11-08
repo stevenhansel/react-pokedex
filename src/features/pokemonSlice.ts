@@ -174,3 +174,21 @@ export const getPokemonById = wrapReduxAsyncHandler(
     dispatch(getSinglePokemonReducer({ pokemon: transformedPokemon }));
   }
 );
+
+export const getPokemonsDynamically = wrapReduxAsyncHandler(
+  statusHandler,
+  async (dispatch, { pokemonIds }) => {
+    for await (const id of pokemonIds) {
+      const pokemon = await fromApi.getPokemonByNameOrId(id);
+      const pokemonImageUrl = transformSpriteToBaseImage(
+        pokemon.id,
+        baseImageUrl
+      );
+      const transformedPokemon = {
+        ...camelcaseObject(pokemon),
+        sprites: { frontDefault: pokemonImageUrl },
+      };
+      dispatch(getSinglePokemonReducer({ pokemon: transformedPokemon }));
+    }
+  }
+);

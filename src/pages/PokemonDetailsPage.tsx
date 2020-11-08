@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { RouteComponentProps } from "react-router";
@@ -8,13 +8,18 @@ import PokemonDetailsEvolutions from "../components/PokemonDetailsEvolutions";
 import PokemonDetailsHeader from "../components/PokemonDetailsHeader";
 import PokemonDetailsStats from "../components/PokemonDetailsStats";
 import Tab from "../components/Tab";
-import { getPokemonById, pokemonsSelector } from "../features/pokemonSlice";
+import {
+  getPokemonById,
+  getPokemonsDynamically,
+  pokemonsSelector,
+} from "../features/pokemonSlice";
 import { getSpeciesById, speciesSelector } from "../features/speciesSlice";
 import { PokemonTypeColors, SliceStatus } from "../globals";
 import { ScaleLoader } from "react-spinners";
 import { useTransition, animated } from "react-spring";
 import { capitalize } from "../utils/capitalize";
 import {
+  ChainLink,
   evolutionChainSelector,
   getEvolutionChainById,
 } from "../features/evolutionChainSlice";
@@ -29,7 +34,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
   const { id } = match.params;
   const dispatch = useDispatch();
   const history = useHistory();
-  const [activeTab, setActiveTab] = useState<PokemonTabs>("evolutions");
+  const [activeTab, setActiveTab] = useState<PokemonTabs>("biography");
   const transitions = useTransition(activeTab, (p) => p, {
     from: { opacity: 0 },
     enter: { opacity: 1 },
@@ -42,17 +47,49 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
   const pokemons = useSelector(pokemonsSelector);
   const species = useSelector(speciesSelector);
   const evolutionChain = useSelector(evolutionChainSelector);
+  const [chainLinks, setChainLinks] = useState<ChainLink[]>([]);
+  const [
+    selectedEvolutionPokemonIds,
+    setSelectedEvolutionPokemonIds,
+  ] = useState<number[]>([]);
 
   const selectedPokemon = pokemons.data.find(
     (pokemon) => pokemon !== null && pokemon.id === Number(id)
   );
   const selectedSpecies = species.data.find((s) => s.id === Number(id));
-  const evolutionChainId = selectedSpecies?.evolutionChain.url
-    .split("/")
-    .slice(-2)[0];
-  const selectedEvolutionChain = evolutionChain.data.find(
-    (e) => e.id === Number(evolutionChainId)
+  const evolutionChainId =
+    selectedSpecies?.evolutionChain?.url.split("/").slice(-2)[0] || null;
+  const selectedEvolutionChain =
+    evolutionChainId !== null
+      ? evolutionChain.data.find((e) => e.id === Number(evolutionChainId))
+      : null;
+
+  const getPokemonEvolution = useCallback(
+    (chain: ChainLink | null): ChainLink[] => {
+      if (!chain) {
+        return [];
+      } else {
+        console.log(chain);
+        return [chain].concat(getPokemonEvolution(chain.evolvesTo[0]));
+      }
+    },
+    []
   );
+
+  useEffect(() => {
+    if (selectedEvolutionChain?.chain) {
+      const pokemons: ChainLink[] = getPokemonEvolution(
+        selectedEvolutionChain.chain
+      );
+      const pokemonIds = pokemons.map(({ species }) =>
+        Number(species.url.split("/").slice(-2)[0])
+      );
+      dispatch(getPokemonsDynamically({ pokemonIds }));
+      setSelectedEvolutionPokemonIds(pokemonIds);
+      setChainLinks(pokemons);
+    }
+    //eslint-disable-next-line
+  }, [selectedEvolutionChain]);
 
   useEffect(() => {
     if (pokemons.data.length === 0) {
@@ -66,7 +103,8 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
     if (evolutionChainId) {
       dispatch(getEvolutionChainById({ id: Number(evolutionChainId) }));
     }
-  }, [selectedPokemon, evolutionChainId, dispatch]);
+    //eslint-disable-next-line
+  }, [selectedPokemon, evolutionChainId]);
 
   const backgroundColors = selectedPokemon?.types.map(({ type }) => {
     const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
@@ -81,10 +119,10 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
   const isPageLoading =
     species.status.state === SliceStatus.IDLE ||
     species.status.state === SliceStatus.LOADING ||
-    pokemons.status.state === SliceStatus.IDLE ||
-    pokemons.status.state === SliceStatus.LOADING ||
     evolutionChain.status.state === SliceStatus.IDLE ||
-    evolutionChain.status.state === SliceStatus.LOADING;
+    evolutionChain.status.state === SliceStatus.LOADING ||
+    pokemons.status.state === SliceStatus.IDLE ||
+    pokemons.status.state === SliceStatus.LOADING;
 
   return (
     <Layout title={capitalize(selectedPokemon?.name)}>
@@ -168,8 +206,8 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                             case "evolutions":
                               page = (
                                 <PokemonDetailsEvolutions
-                                  pokemon={selectedPokemon}
-                                  species={selectedSpecies}
+                                  selectedIds={selectedEvolutionPokemonIds}
+                                  chainLinks={chainLinks}
                                   selectedBackgroundColor={
                                     selectedBackgroundColor
                                   }

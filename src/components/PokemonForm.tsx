@@ -105,7 +105,7 @@ const PokemonForm = ({
         className={
           "ml-2 md:ml-5 mt-3 md:mt-0 bg-primary py-1 px-8 rounded-md text-white font-semibold  focus:outline-none transition duration-200 ease-in-out" +
           (isLoading
-            ? " opacity-50 cursor-default"
+            ? " opacity-25 cursor-default"
             : " hover:bg-white hover:text-primary transform hover:-translate-y-1 cursor-pointer")
         }
         onClick={submitFormHandler}

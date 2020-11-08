@@ -1,35 +1,46 @@
 import React from "react";
-import { Pokemon } from "../features/pokemonSlice";
-import { Species } from "../features/speciesSlice";
+import { useSelector } from "react-redux";
+import { ChainLink } from "../features/evolutionChainSlice";
+import { pokemonsSelector } from "../features/pokemonSlice";
 
 import PokemonEvolution from "./PokemonEvolution";
 
 type Props = {
-  pokemon: Pokemon;
-  species: Species;
+  selectedIds: number[];
+  chainLinks: ChainLink[];
   selectedBackgroundColor: { light: string; medium: string };
 };
 
 const PokemonDetailsEvolutions = ({
-  pokemon,
-  species,
   selectedBackgroundColor,
+  selectedIds,
+  chainLinks,
 }: Props) => {
-  return (
-    <div className="mt-12 text-center lg:grid lg:grid-cols-2 lg:gap-y-10">
-      <PokemonEvolution
-        pokemon={pokemon}
-        selectedBackgroundColor={selectedBackgroundColor}
-      />
+  const pokemons = useSelector(pokemonsSelector);
 
-      <PokemonEvolution
-        pokemon={pokemon}
-        selectedBackgroundColor={selectedBackgroundColor}
-      />
-      <PokemonEvolution
-        pokemon={pokemon}
-        selectedBackgroundColor={selectedBackgroundColor}
-      />
+  return (
+    <div className="mt-12 text-center ">
+      <div className="lg:grid lg:grid-cols-2 lg:gap-y-10">
+        {selectedIds.map((id) => {
+          const pokemon = pokemons.data.find((p) => p !== null && id === p.id);
+          const chain = chainLinks.find(
+            ({ species }) =>
+              Number(species.url.split("/").splice(-2)[0]) === pokemon?.id
+          );
+
+          return (
+            <>
+              {pokemon && (
+                <PokemonEvolution
+                  pokemon={pokemon}
+                  chain={chain}
+                  selectedBackgroundColor={selectedBackgroundColor}
+                />
+              )}
+            </>
+          );
+        })}
+      </div>
     </div>
   );
 };
