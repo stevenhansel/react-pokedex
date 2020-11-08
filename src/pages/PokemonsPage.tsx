@@ -9,6 +9,7 @@ import { pokemonsSelector, getPokemons } from "../features/pokemonSlice";
 import { SliceStatus } from "../globals";
 import { cachedPokemonsSelector } from "../features/cachedPokemonsSlice";
 import PokemonSkeleton from "../components/PokemonSkeleton";
+import { AiFillGithub } from "react-icons/ai";
 
 const PokemonsPage = () => {
   const pokemons = useSelector(pokemonsSelector);
@@ -16,9 +17,19 @@ const PokemonsPage = () => {
 
   return (
     <Layout title="Home">
-      <h1 className="text-3xl lg:text-5xl font-semibold text-center sm:text-left">
-        React Pokédex
-      </h1>
+      <div className="flex items-center justify-center lg:justify-start">
+        <h1 className="text-3xl lg:text-5xl font-semibold sm:text-left inline-block">
+          React Pokédex
+        </h1>
+        <a
+          href="https://github.com/ShinteiMai/react-pokedex"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-block ml-4 transform hover:opacity-50 hover:-translate-y-1 transition-all duration-150"
+        >
+          <AiFillGithub size={32} />
+        </a>
+      </div>
 
       <InfiniteScroll
         paginationHandler={(page: number) =>

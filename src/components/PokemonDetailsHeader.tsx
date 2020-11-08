@@ -113,13 +113,7 @@ const PokemonDetailsHeader = ({
               preview={imagePlaceholder[0]}
               src={pokemon.sprites.frontDefault}
               render={(src, style) => (
-                <img
-                  src={src}
-                  alt={pokemon.name}
-                  style={{
-                    ...style,
-                  }}
-                />
+                <img src={src} alt={pokemon.name} style={style} />
               )}
             />
           </animated.div>

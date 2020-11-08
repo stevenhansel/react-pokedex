@@ -99,7 +99,7 @@ const PokemonGenerations = ({
           "bg-primaryGray px-4 py-1 rounded-lg text-white hover:border-transparent focus:outline-none " +
           " " +
           (isLoading
-            ? "opacity-50 cursor-default"
+            ? "opacity-25 cursor-default"
             : "cursor-pointer transform hover:-translate-y-1 hover:shadow transition-all duration-200 ease-in-out")
         }
       >

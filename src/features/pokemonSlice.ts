@@ -4,8 +4,11 @@ import { SliceStatus } from "../globals";
 import { RootState } from "./store";
 import { NamedAPIResource } from "./types";
 import { camelcaseObject } from "../utils/camelcaseObject";
-import { statusHandlerReducer, wrapReduxAsyncHandler } from "./utilities";
-import { leftPad } from "../utils/leftPad";
+import {
+  statusHandlerReducer,
+  transformSpriteToBaseImage,
+  wrapReduxAsyncHandler,
+} from "./utilities";
 import { baseImageUrl } from "../api/axios";
 
 export const PAGINATE_SIZE = 6;
@@ -125,10 +128,6 @@ export const pokemonsSelector = (state: RootState) => state.pokemons;
 
 const statusHandler = { initialize, error, success };
 
-const transformSpriteToBaseImage = (pokemonId: number): string => {
-  return baseImageUrl + leftPad(pokemonId, 3) + ".png";
-};
-
 export const getPokemons = wrapReduxAsyncHandler(
   statusHandler,
   async (dispatch, { page, cachedPokemons, pokemons }) => {
@@ -138,8 +137,11 @@ export const getPokemons = wrapReduxAsyncHandler(
 
     for await (const [index, { url }] of results.entries()) {
       const pokemonId = Number(url.split("/").slice(-2)[0]);
-      const pokemon = await fromApi.getPokemonById(pokemonId);
-      const pokemonImageUrl = transformSpriteToBaseImage(pokemon.id);
+      const pokemon = await fromApi.getPokemonByNameOrId(pokemonId);
+      const pokemonImageUrl = transformSpriteToBaseImage(
+        pokemon.id,
+        baseImageUrl
+      );
 
       dispatch(
         getPokemonsReducer({
@@ -160,12 +162,33 @@ export const getPokemons = wrapReduxAsyncHandler(
 export const getPokemonById = wrapReduxAsyncHandler(
   statusHandler,
   async (dispatch, { pokemonId }) => {
-    const pokemon = await fromApi.getPokemonById(pokemonId);
-    const pokemonImageUrl = transformSpriteToBaseImage(pokemon.id);
+    const pokemon = await fromApi.getPokemonByNameOrId(pokemonId);
+    const pokemonImageUrl = transformSpriteToBaseImage(
+      pokemon.id,
+      baseImageUrl
+    );
     const transformedPokemon = {
       ...camelcaseObject(pokemon),
       sprites: { frontDefault: pokemonImageUrl },
     };
     dispatch(getSinglePokemonReducer({ pokemon: transformedPokemon }));
+  }
+);
+
+export const getPokemonsDynamically = wrapReduxAsyncHandler(
+  statusHandler,
+  async (dispatch, { pokemonIds }) => {
+    for await (const id of pokemonIds) {
+      const pokemon = await fromApi.getPokemonByNameOrId(id);
+      const pokemonImageUrl = transformSpriteToBaseImage(
+        pokemon.id,
+        baseImageUrl
+      );
+      const transformedPokemon = {
+        ...camelcaseObject(pokemon),
+        sprites: { frontDefault: pokemonImageUrl },
+      };
+      dispatch(getSinglePokemonReducer({ pokemon: transformedPokemon }));
+    }
   }
 );

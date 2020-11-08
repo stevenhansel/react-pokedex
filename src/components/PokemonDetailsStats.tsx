@@ -45,7 +45,9 @@ const PokemonDetailsStats = ({ pokemon }: Props) => {
         ))}
         <div className="grid grid-cols-5 gap-2 md:gap-4 lg:gap-8 mt-5">
           <span className="text-darkerGray font-medium">Total</span>
-          <span className="text-center font-semibold">40</span>
+          <span className="text-center font-semibold">
+            {stats.reduce((sum, { min }) => sum + min, 0)}
+          </span>
           <div className="col-span-2 w-full flex items-center" />
           <span className="text-center text-darkerGray font-medium">Max</span>
         </div>
