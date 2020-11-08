@@ -14,6 +14,10 @@ import { PokemonTypeColors, SliceStatus } from "../globals";
 import { ScaleLoader } from "react-spinners";
 import { useTransition, animated } from "react-spring";
 import { capitalize } from "../utils/capitalize";
+import {
+  evolutionChainSelector,
+  getEvolutionChainById,
+} from "../features/evolutionChainSlice";
 
 type PokemonTabs = "biography" | "stats" | "evolutions";
 
@@ -37,11 +41,18 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
 
   const pokemons = useSelector(pokemonsSelector);
   const species = useSelector(speciesSelector);
+  const evolutionChain = useSelector(evolutionChainSelector);
 
   const selectedPokemon = pokemons.data.find(
     (pokemon) => pokemon !== null && pokemon.id === Number(id)
   );
   const selectedSpecies = species.data.find((s) => s.id === Number(id));
+  const evolutionChainId = selectedSpecies?.evolutionChain.url
+    .split("/")
+    .slice(-2)[0];
+  const selectedEvolutionChain = evolutionChain.data.find(
+    (e) => e.id === Number(evolutionChainId)
+  );
 
   useEffect(() => {
     if (pokemons.data.length === 0) {
@@ -49,7 +60,13 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
     }
     dispatch(getSpeciesById({ pokemonId: id }));
     //eslint-disable-next-line
-  }, []);
+  }, [id, pokemons.data.length]);
+
+  useEffect(() => {
+    if (evolutionChainId) {
+      dispatch(getEvolutionChainById({ id: Number(evolutionChainId) }));
+    }
+  }, [selectedPokemon, evolutionChainId, dispatch]);
 
   const backgroundColors = selectedPokemon?.types.map(({ type }) => {
     const [[, backgroundColor]] = Object.entries(PokemonTypeColors).filter(
@@ -61,113 +78,126 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
 
   const selectedBackgroundColor = backgroundColors && backgroundColors[0];
 
+  const isPageLoading =
+    species.status.state === SliceStatus.IDLE ||
+    species.status.state === SliceStatus.LOADING ||
+    pokemons.status.state === SliceStatus.IDLE ||
+    pokemons.status.state === SliceStatus.LOADING ||
+    evolutionChain.status.state === SliceStatus.IDLE ||
+    evolutionChain.status.state === SliceStatus.LOADING;
+
   return (
     <Layout title={capitalize(selectedPokemon?.name)}>
-      {species.status.state === SliceStatus.IDLE ||
-      species.status.state === SliceStatus.LOADING ? (
+      {isPageLoading ? (
         <div className="text-center mx-auto mt-12">
           <ScaleLoader color="#E3350D" radius={16} />
         </div>
       ) : (
         <>
           <>
-            {selectedPokemon && selectedSpecies && selectedBackgroundColor && (
-              <div className="pb-8">
-                <button
-                  className="text-primary font-semibold transform hover:-translate-y-1 transition-transform ease-in duration-150 focus:outline-none"
-                  onClick={() => history.push("/")}
-                >
-                  <span className="text-primary font-semibold">Go Back</span>
-                </button>
-                <div
-                  className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto my-4 rounded-lg shadow-lg"
-                  style={{
-                    backgroundColor:
-                      selectedBackgroundColor && selectedBackgroundColor.medium,
-                  }}
-                >
-                  <PokemonDetailsHeader
-                    pokemon={selectedPokemon}
-                    species={selectedSpecies}
-                    selectedBackgroundColor={selectedBackgroundColor}
-                  />
-                  <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden w-full pt-16 lg:pt-8 px-6 md:px-12 lg:px-24">
-                    <div className="flex flex-row justify-between w-full">
-                      <Tab
-                        handleSelect={() => setActiveTab("biography")}
-                        isSelected={activeTab === "biography"}
-                      >
-                        Biography
-                      </Tab>
-                      <Tab
-                        handleSelect={() => setActiveTab("stats")}
-                        isSelected={activeTab === "stats"}
-                      >
-                        Stats
-                      </Tab>
-                      <Tab
-                        handleSelect={() => setActiveTab("evolutions")}
-                        isSelected={activeTab === "evolutions"}
-                      >
-                        Evolutions
-                      </Tab>
-                    </div>
-                    <div className="relative mt-8 lg:h-178">
-                      {transitions.map(({ item, key, props }) => {
-                        let page: JSX.Element = (
-                          <PokemonDetailsBiography
-                            species={selectedSpecies}
-                            pokemon={selectedPokemon}
-                          />
-                        );
+            {selectedPokemon &&
+              selectedSpecies &&
+              selectedBackgroundColor &&
+              selectedEvolutionChain && (
+                <div className="pb-8">
+                  <button
+                    className="text-primary font-semibold transform hover:-translate-y-1 transition-transform ease-in duration-150 focus:outline-none"
+                    onClick={() => history.push("/")}
+                  >
+                    <span className="text-primary font-semibold">Go Back</span>
+                  </button>
+                  <div
+                    className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto my-4 rounded-lg shadow-lg"
+                    style={{
+                      backgroundColor:
+                        selectedBackgroundColor &&
+                        selectedBackgroundColor.medium,
+                    }}
+                  >
+                    <PokemonDetailsHeader
+                      pokemon={selectedPokemon}
+                      species={selectedSpecies}
+                      selectedBackgroundColor={selectedBackgroundColor}
+                    />
+                    <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden w-full pt-16 lg:pt-8 px-6 md:px-12 lg:px-24">
+                      <div className="flex flex-row justify-between w-full">
+                        <Tab
+                          handleSelect={() => setActiveTab("biography")}
+                          isSelected={activeTab === "biography"}
+                        >
+                          Biography
+                        </Tab>
+                        <Tab
+                          handleSelect={() => setActiveTab("stats")}
+                          isSelected={activeTab === "stats"}
+                        >
+                          Stats
+                        </Tab>
+                        <Tab
+                          handleSelect={() => setActiveTab("evolutions")}
+                          isSelected={activeTab === "evolutions"}
+                        >
+                          Evolutions
+                        </Tab>
+                      </div>
+                      <div className="relative mt-8 lg:h-178">
+                        {transitions.map(({ item, key, props }) => {
+                          let page: JSX.Element = (
+                            <PokemonDetailsBiography
+                              species={selectedSpecies}
+                              pokemon={selectedPokemon}
+                            />
+                          );
 
-                        switch (item) {
-                          case "biography":
-                            page = (
-                              <PokemonDetailsBiography
-                                species={selectedSpecies}
-                                pokemon={selectedPokemon}
-                              />
-                            );
-                            break;
-                          case "stats":
-                            page = (
-                              <PokemonDetailsStats pokemon={selectedPokemon} />
-                            );
-                            break;
-                          case "evolutions":
-                            page = (
-                              <PokemonDetailsEvolutions
-                                pokemon={selectedPokemon}
-                                species={selectedSpecies}
-                                selectedBackgroundColor={
-                                  selectedBackgroundColor
-                                }
-                              />
-                            );
-                            break;
-                          default:
-                            break;
-                        }
-                        return (
-                          <animated.div
-                            key={key}
-                            style={{
-                              ...props,
-                              position: "relative",
-                              width: "100%",
-                              height: "100%",
-                            }}
-                          >
-                            {page}
-                          </animated.div>
-                        );
-                      })}
+                          switch (item) {
+                            case "biography":
+                              page = (
+                                <PokemonDetailsBiography
+                                  species={selectedSpecies}
+                                  pokemon={selectedPokemon}
+                                />
+                              );
+                              break;
+                            case "stats":
+                              page = (
+                                <PokemonDetailsStats
+                                  pokemon={selectedPokemon}
+                                />
+                              );
+                              break;
+                            case "evolutions":
+                              page = (
+                                <PokemonDetailsEvolutions
+                                  pokemon={selectedPokemon}
+                                  species={selectedSpecies}
+                                  selectedBackgroundColor={
+                                    selectedBackgroundColor
+                                  }
+                                />
+                              );
+                              break;
+                            default:
+                              break;
+                          }
+                          return (
+                            <animated.div
+                              key={key}
+                              style={{
+                                ...props,
+                                position: "relative",
+                                width: "100%",
+                                height: "100%",
+                              }}
+                            >
+                              {page}
+                            </animated.div>
+                          );
+                        })}
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
+              )}
           </>
         </>
       )}

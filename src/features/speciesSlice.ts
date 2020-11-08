@@ -107,7 +107,7 @@ const statusHandler = { initialize, error, success };
 export const getSpeciesByName = wrapReduxAsyncHandler(
   statusHandler,
   async (dispatch, { pokemonName }) => {
-    const pokemonSpecies = await fromApi.getSpeciesByName(pokemonName);
+    const pokemonSpecies = await fromApi.getSpeciesByNameOrId(pokemonName);
     dispatch(getSpeciesReducer({ species: camelcaseObject(pokemonSpecies) }));
   }
 );
@@ -115,7 +115,7 @@ export const getSpeciesByName = wrapReduxAsyncHandler(
 export const getSpeciesById = wrapReduxAsyncHandler(
   statusHandler,
   async (dispatch, { pokemonId }) => {
-    const pokemonSpecies = await fromApi.getSpeciesById(pokemonId);
+    const pokemonSpecies = await fromApi.getSpeciesByNameOrId(pokemonId);
 
     dispatch(getSpeciesReducer({ species: camelcaseObject(pokemonSpecies) }));
   }

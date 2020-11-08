@@ -72,7 +72,7 @@ const PokemonEvolution = ({ pokemon, selectedBackgroundColor }: Props) => {
           Level 16
         </p>
       </div>
-      <p className="flex items-center mx-auto">
+      <p className="flex items-center mx-auto mt-2 mb-4 lg:mb-0 lg:mt-0">
         <AiOutlineCaretDown className="block mx-auto lg:hidden" size={24} />
         <AiOutlineCaretRight className="hidden mx-auto lg:block" size={24} />
       </p>

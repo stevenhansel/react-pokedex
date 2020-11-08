@@ -1,6 +1,7 @@
 import { Dispatch } from "react";
 import { ActionCreatorWithPayload, PayloadAction } from "@reduxjs/toolkit";
 import { SliceStatus } from "../globals";
+import { leftPad } from "../utils/leftPad";
 
 export const statusHandlerReducer = {
   initialize: (state: any, action: PayloadAction) => {
@@ -37,4 +38,11 @@ export const wrapReduxAsyncHandler = (
     .catch((err) => {
       console.error(err);
     });
+};
+
+export const transformSpriteToBaseImage = (
+  pokemonId: number,
+  baseUrl: string
+): string => {
+  return baseUrl + leftPad(pokemonId, 3) + ".png";
 };
