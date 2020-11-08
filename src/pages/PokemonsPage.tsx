@@ -17,7 +17,7 @@ const PokemonsPage = () => {
 
   return (
     <Layout title="Home">
-      <>
+      <div className="flex items-center justify-center lg:justify-start">
         <h1 className="text-3xl lg:text-5xl font-semibold sm:text-left inline-block">
           React Pokédex
         </h1>
@@ -29,7 +29,7 @@ const PokemonsPage = () => {
         >
           <AiFillGithub size={32} />
         </a>
-      </>
+      </div>
 
       <InfiniteScroll
         paginationHandler={(page: number) =>
