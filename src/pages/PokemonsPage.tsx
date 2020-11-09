@@ -32,6 +32,7 @@ const PokemonsPage = () => {
       </div>
 
       <InfiniteScroll
+        data={pokemons.data}
         paginationHandler={(page: number) =>
           getPokemons({
             page,
@@ -58,9 +59,7 @@ const PokemonsPage = () => {
                   <InfiniteScroll.Container>
                     {pokemons.data.map((pokemon, index) =>
                       pokemon === null ? (
-                        <div key={`loading-${index}`}>
-                          <PokemonSkeleton />
-                        </div>
+                        <PokemonSkeleton key={`loading-${index}`} />
                       ) : (
                         <PokemonCard key={pokemon.id} {...pokemon} />
                       )
