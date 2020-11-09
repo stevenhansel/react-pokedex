@@ -65,6 +65,8 @@ const cachedPokemonsSlice = createSlice({
           };
         })
         .sort((a, b) => a.distance - b.distance);
+
+      console.log(state.data);
     },
     filterPokemonsByGenerationReducer(
       state,

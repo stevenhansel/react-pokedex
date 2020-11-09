@@ -38,8 +38,6 @@ const PokemonForm = ({
 
   const isLoading = pokemons.status.state === SliceStatus.LOADING;
 
-  useEffect(() => {}, []);
-
   useEffect(() => {
     if (changeHandler) {
       clearTimeout(inputRef.current);
