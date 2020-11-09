@@ -6,6 +6,7 @@ import { leftPad } from "../utils/leftPad";
 
 import { AiOutlineCaretDown, AiOutlineCaretRight } from "react-icons/ai";
 import { ChainLink } from "../features/evolutionChainSlice";
+import { useHistory } from "react-router-dom";
 
 const MaskSize = 200;
 const ImageSize = 150;
@@ -36,6 +37,7 @@ const PokemonEvolution = ({
   chain,
   selectedBackgroundColor,
 }: Props) => {
+  const history = useHistory();
   const imagePlaceholder = pokemon.types.map(({ type }) => {
     const [[, image]] = Object.entries(PokemonTypePlaceholders).filter(
       ([key, _]) => key === type.name
@@ -57,6 +59,8 @@ const PokemonEvolution = ({
             className="rounded-full absolute inset-x-auto mx-auto z-0 inline-block left-0 right-0"
           />
           <div
+            onClick={() => history.push(`/pokemons/${pokemon.id}`)}
+            className="cursor-pointer transform hover:-translate-y-2 transition-all duration-300"
             style={{
               ...ImageContainerStyling,
               position: "absolute",

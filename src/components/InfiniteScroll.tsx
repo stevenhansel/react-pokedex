@@ -1,4 +1,4 @@
-import React, { useState, useContext, createContext } from "react";
+import React, { useState, useContext, createContext, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { getPokemons, PAGINATE_SIZE } from "../features/pokemonSlice";
 import LoadButton from "./LoadButton";
@@ -11,26 +11,37 @@ type ContextType = {
   paginationHandler: (
     page: number
   ) => (dispatch: React.Dispatch<any>) => Promise<void>;
+  data: any[];
 };
 const InfiniteScrollContext = createContext<ContextType>({
   page: 0,
   setPage: () => {},
   isLoading: true,
   paginationHandler: getPokemons,
+  data: [],
 });
 
 const Waypoint = () => {
-  const { isLoading, setPage, page, paginationHandler } = useContext(
+  const { isLoading, setPage, page, paginationHandler, data } = useContext(
     InfiniteScrollContext
   );
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setPage(data.length - (data.length % 6));
+    //eslint-disable-next-line
+  }, []);
+
   return (
     <div className="mt-48">
       <ReactWaypoint
         onEnter={() => {
           if (!isLoading) {
-            setPage(page + PAGINATE_SIZE);
-            dispatch(paginationHandler(page));
+            const updatedPage = page + PAGINATE_SIZE;
+            const dispatchPage =
+              updatedPage + (data.length > updatedPage ? 6 : 0);
+            setPage(dispatchPage);
+            dispatch(paginationHandler(dispatchPage));
           }
         }}
       />
@@ -76,14 +87,16 @@ type InfiniteScrollProps = {
     page: number
   ) => (dispatch: React.Dispatch<any>) => Promise<void>;
   isLoading: boolean;
+  data: any[];
 };
 
 const InfiniteScroll = ({
   children,
   paginationHandler,
   isLoading,
+  data,
 }: InfiniteScrollProps) => {
-  const [page, setPage] = useState(0);
+  const [page, setPage] = useState<number>(0);
 
   return (
     <InfiniteScrollContext.Provider
@@ -92,6 +105,7 @@ const InfiniteScroll = ({
         setPage,
         isLoading,
         paginationHandler,
+        data,
       }}
     >
       {children({ mutatePage: setPage })}

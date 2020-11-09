@@ -69,7 +69,6 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
       if (!chain) {
         return [];
       } else {
-        console.log(chain);
         return [chain].concat(getPokemonEvolution(chain.evolvesTo[0]));
       }
     },
