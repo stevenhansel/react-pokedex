@@ -37,9 +37,7 @@ const Waypoint = () => {
       <ReactWaypoint
         onEnter={() => {
           if (!isLoading) {
-            const updatedPage = page + PAGINATE_SIZE;
-            const dispatchPage =
-              updatedPage + (data.length > updatedPage ? 6 : 0);
+            const dispatchPage = page + (data.length > page ? 6 : 0);
             setPage(dispatchPage);
             dispatch(paginationHandler(dispatchPage));
           }
