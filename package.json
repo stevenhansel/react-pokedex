@@ -5,7 +5,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
     "@types/fast-levenshtein": "^0.0.1",
-    "axios": "^0.20.0",
+    "axios": "^0.21.0",
     "fast-levenshtein": "^3.0.0",
     "lodash-humps-ts": "^0.0.6",
     "react": "^16.14.0",
@@ -21,7 +21,7 @@
     "react-spinners": "^0.9.0",
     "react-spring": "^8.0.27",
     "react-waypoint": "^9.0.3",
-    "typescript": "~3.7.2"
+    "typescript": "~4.0.5"
   },
   "scripts": {
     "start": "craco start",
@@ -46,21 +46,21 @@
   "devDependencies": {
     "@craco/craco": "^5.7.0",
     "@testing-library/dom": "^7.26.5",
-    "@testing-library/jest-dom": "^4.2.4",
-    "@testing-library/react": "^9.5.0",
-    "@testing-library/user-event": "^7.2.1",
+    "@testing-library/jest-dom": "^5.11.5",
+    "@testing-library/react": "^11.1.1",
+    "@testing-library/user-event": "^12.2.0",
     "@types/axios": "^0.14.0",
-    "@types/jest": "^24.0.0",
-    "@types/node": "^12.0.0",
-    "@types/react": "^16.9.0",
-    "@types/react-dom": "^16.9.0",
+    "@types/jest": "^26.0.15",
+    "@types/node": "^14.14.7",
+    "@types/react": "^16.9.56",
+    "@types/react-dom": "^16.9.9",
     "@types/react-helmet": "^6.1.0",
-    "@types/react-redux": "^7.1.9",
+    "@types/react-redux": "^7.1.11",
     "@types/react-responsive": "^8.0.2",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-scroll": "^1.8.2",
     "autoprefixer": "^10.0.1",
     "postcss-nested": "^5.0.1",
-    "tailwindcss": "^1.9.5"
+    "tailwindcss": "^1.9.6"
   }
 }
