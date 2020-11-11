@@ -1,6 +1,12 @@
 import { leftPad } from "./leftPad";
 
 describe("leftPad", () => {
+  it("returns '001' when receives '1, -3'", () => {
+    let output = leftPad(1, -3);
+
+    expect(output).toEqual("001");
+  });
+
   it("returns '001' when receives '-1, 3'", () => {
     let output = leftPad(-1, 3);
 
