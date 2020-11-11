@@ -17,13 +17,13 @@ describe("camelcaseObject", () => {
     let array = camelcaseObject([
       { first_name: "Jonh" },
       { firstName: "Peter" },
-      { "first-name": "Jaz" }
+      { "first-name": "Jaz" },
     ]);
 
     expect(array).toEqual([
       { firstName: "Jonh" },
       { firstName: "Peter" },
-      { firstName: "Jaz" }
+      { firstName: "Jaz" },
     ]);
   });
 });
