@@ -34,15 +34,15 @@ const Waypoint = () => {
 
   return (
     <div className="mt-48">
-      <ReactWaypoint
-        onEnter={() => {
-          if (!isLoading) {
+      {!isLoading && (
+        <ReactWaypoint
+          onEnter={() => {
             const dispatchPage = page + (data.length > page ? 6 : 0);
             setPage(dispatchPage);
             dispatch(paginationHandler(dispatchPage));
-          }
-        }}
-      />
+          }}
+        />
+      )}
     </div>
   );
 };
