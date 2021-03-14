@@ -7,6 +7,7 @@ import PokemonDetailsHeader from "./PokemonDetailsHeader";
 import PokemonDetailsStats from "./PokemonDetailsStats";
 import PokemonForm from "./PokemonForm";
 import PokemonSkeleton from "./PokemonSkeleton";
+import PokemonsTitle from "./PokemonsTitle";
 import Tab from "./Tab";
 
 export {
@@ -19,5 +20,6 @@ export {
   PokemonDetailsStats,
   PokemonForm,
   PokemonSkeleton,
+  PokemonsTitle,
   Tab,
 };
