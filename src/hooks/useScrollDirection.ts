@@ -6,34 +6,42 @@ const SCROLL_DOWN = "down";
 type Directions = "up" | "down";
 
 type Props = {
-  initialDirection?: Directions;
-  thresholdPixels?: number;
-  off?: boolean;
+  direction: Directions;
+  thresholdPixels: number;
+  off: boolean;
 };
 
-const useScrollDirection = ({
-  initialDirection,
-  thresholdPixels,
-  off,
-}: Props = {}) => {
-  const [scrollDir, setScrollDir] = useState(initialDirection);
+const useScrollDirection = (
+  { direction, thresholdPixels, off }: Props = {
+    direction: "down",
+    thresholdPixels: 0,
+    off: false,
+  }
+) => {
+  const [scrollDirection, setScrollDirection] = useState(direction);
+
+  const scrollToTop = (): void => setScrollDirection("up");
+
+  const isDown = (): boolean => scrollDirection === "down";
 
   useEffect(() => {
-    const threshold = thresholdPixels || 0;
-    let lastScrollY = window.pageYOffset;
+    let firstScrollY = window.pageYOffset;
     let ticking = false;
 
     const updateScrollDir = () => {
-      const scrollY = window.pageYOffset;
+      const currentScrollY = window.pageYOffset;
 
-      if (Math.abs(scrollY - lastScrollY) < threshold) {
-        // We haven't exceeded the threshold
+      if (Math.abs(currentScrollY - firstScrollY) < thresholdPixels) {
+        // We haven't exceeded the thresholdPixels
         ticking = false;
         return;
       }
 
-      setScrollDir(scrollY > lastScrollY ? SCROLL_DOWN : SCROLL_UP);
-      lastScrollY = scrollY > 0 ? scrollY : 0;
+      setScrollDirection(
+        currentScrollY < firstScrollY ? SCROLL_DOWN : SCROLL_UP
+      );
+
+      firstScrollY = currentScrollY > 0 ? currentScrollY : 0;
       ticking = false;
     };
 
@@ -44,18 +52,15 @@ const useScrollDirection = ({
       }
     };
 
-    /**
-     * Bind the scroll handler if `off` is set to false.
-     * If `off` is set to true reset the scroll direction.
-     */
-    !off
-      ? window.addEventListener("scroll", onScroll)
-      : setScrollDir(initialDirection);
+    // If `off` is set to true, it always will show the navbar.
+    off
+      ? setScrollDirection(scrollDirection)
+      : window.addEventListener("scroll", onScroll);
 
     return () => window.removeEventListener("scroll", onScroll);
-  }, [initialDirection, thresholdPixels, off]);
+  }, [scrollDirection, thresholdPixels, off]);
 
-  return scrollDir;
+  return { isDown, scrollToTop };
 };
 
 export default useScrollDirection;
