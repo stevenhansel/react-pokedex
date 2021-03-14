@@ -1,15 +1,21 @@
 import React from "react";
-import PokemonForm from "../components/PokemonForm";
 
-import Layout from "../components/Layout";
-import InfiniteScroll from "../components/InfiniteScroll";
-import PokemonCard from "../components/PokemonCard";
 import { useSelector } from "react-redux";
-import { pokemonsSelector, getPokemons } from "../features/pokemonSlice";
 import { SliceStatus } from "../globals";
-import { cachedPokemonsSelector } from "../features/cachedPokemonsSlice";
-import PokemonSkeleton from "../components/PokemonSkeleton";
 import { AiFillGithub } from "react-icons/ai";
+import {
+  pokemonsSelector,
+  getPokemons,
+  cachedPokemonsSelector,
+} from "../features";
+
+import {
+  InfiniteScroll,
+  Layout,
+  PokemonCard,
+  PokemonForm,
+  PokemonSkeleton,
+} from "../components";
 
 const PokemonsPage = () => {
   const pokemons = useSelector(pokemonsSelector);
@@ -18,7 +24,7 @@ const PokemonsPage = () => {
   return (
     <Layout title="Home">
       <div className="flex items-center justify-center lg:justify-start">
-        <h1 className="text-3xl lg:text-5xl font-semibold sm:text-left inline-block">
+        <h1 className="inline-block text-3xl font-semibold lg:text-5xl sm:text-left">
           React Pokédex
         </h1>
         <a
@@ -44,13 +50,13 @@ const PokemonsPage = () => {
       >
         {({ mutatePage }) => (
           <>
-            <div className="my-4 md:my-6 lg:my-8 w-full">
+            <div className="w-full my-4 md:my-6 lg:my-8">
               <PokemonForm
                 placeholder="Search for a pokémon..."
                 mutatePage={mutatePage}
               />
             </div>
-            <div className="mx-auto w-full text-center">
+            <div className="w-full mx-auto text-center">
               {!(
                 cachedPokemons.status.state === SliceStatus.LOADING ||
                 cachedPokemons.status.state === SliceStatus.IDLE

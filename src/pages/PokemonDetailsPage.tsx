@@ -2,27 +2,30 @@ import React, { useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 import { RouteComponentProps } from "react-router";
-import Layout from "../components/Layout";
-import PokemonDetailsBiography from "../components/PokemonDetailsBiography";
-import PokemonDetailsEvolutions from "../components/PokemonDetailsEvolutions";
-import PokemonDetailsHeader from "../components/PokemonDetailsHeader";
-import PokemonDetailsStats from "../components/PokemonDetailsStats";
-import Tab from "../components/Tab";
-import {
-  getPokemonById,
-  getPokemonsDynamically,
-  pokemonsSelector,
-} from "../features/pokemonSlice";
-import { getSpeciesById, speciesSelector } from "../features/speciesSlice";
 import { PokemonTypeColors, SliceStatus } from "../globals";
 import { ScaleLoader } from "react-spinners";
 import { useTransition, animated } from "react-spring";
 import { capitalize } from "../utils/capitalize";
+import { ChainLink } from "../features/evolutionChainSlice";
+
 import {
-  ChainLink,
+  getPokemonById,
+  getPokemonsDynamically,
+  pokemonsSelector,
+  getSpeciesById,
+  speciesSelector,
   evolutionChainSelector,
   getEvolutionChainById,
-} from "../features/evolutionChainSlice";
+} from "../features";
+
+import {
+  Layout,
+  PokemonDetailsBiography,
+  PokemonDetailsEvolutions,
+  PokemonDetailsHeader,
+  PokemonDetailsStats,
+  Tab,
+} from "../components";
 
 type PokemonTabs = "biography" | "stats" | "evolutions";
 
@@ -126,7 +129,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
   return (
     <Layout title={capitalize(selectedPokemon?.name)}>
       {isPageLoading ? (
-        <div className="text-center mx-auto mt-12">
+        <div className="mx-auto mt-12 text-center">
           <ScaleLoader color="#E3350D" radius={16} />
         </div>
       ) : (
@@ -138,13 +141,13 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
               selectedEvolutionChain && (
                 <div className="pb-8">
                   <button
-                    className="text-primary font-semibold transform hover:-translate-y-1 transition-transform ease-in duration-150 focus:outline-none"
+                    className="font-semibold text-primary transform hover:-translate-y-1 transition-transform ease-in duration-150 focus:outline-none"
                     onClick={() => history.push("/")}
                   >
-                    <span className="text-primary font-semibold">Go Back</span>
+                    <span className="font-semibold text-primary">Go Back</span>
                   </button>
                   <div
-                    className="flex flex-col lg:flex-row justify-center items-start w-full mx-auto my-4 rounded-lg shadow-lg"
+                    className="flex flex-col items-start justify-center w-full mx-auto my-4 rounded-lg shadow-lg lg:flex-row"
                     style={{
                       backgroundColor:
                         selectedBackgroundColor &&
@@ -156,7 +159,7 @@ const PokemonDetailsPage = ({ match }: RouteComponentProps<MatchParams>) => {
                       species={selectedSpecies}
                       selectedBackgroundColor={selectedBackgroundColor}
                     />
-                    <div className="bg-white lg:mt-0 rounded-t-3xl rounded-b-lg lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg overflow-hidden w-full pt-16 lg:pt-8 px-6 md:px-12 lg:px-24">
+                    <div className="w-full px-6 pt-16 overflow-hidden bg-white rounded-b-lg lg:mt-0 rounded-t-3xl lg:rounded-t-none lg:rounded-b-none lg:rounded-r-lg lg:pt-8 md:px-12 lg:px-24">
                       <div className="flex flex-row justify-between w-full">
                         <Tab
                           handleSelect={() => setActiveTab("biography")}
