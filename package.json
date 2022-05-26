@@ -5,7 +5,7 @@
   "dependencies": {
     "@reduxjs/toolkit": "^1.4.0",
     "@types/fast-levenshtein": "^0.0.1",
-    "axios": "^0.21.1",
+    "axios": "^0.21.2",
     "fast-levenshtein": "^3.0.0",
     "lodash-humps-ts": "^0.0.6",
     "react": "^16.14.0",
